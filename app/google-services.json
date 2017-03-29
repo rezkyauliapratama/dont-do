@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "302531211253",
+    "firebase_url": "https://dont-do-eda84.firebaseio.com",
+    "project_id": "dont-do-eda84",
+    "storage_bucket": "dont-do-eda84.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:302531211253:android:ebf378520fc91442",
+        "android_client_info": {
+          "package_name": "rezkyaulia.android.dont_do"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "302531211253-jroslo1b7c2149uqkeq6topbbda6o7ib.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "rezkyaulia.android.dont_do",
+            "certificate_hash": "B9721F15668D04DC4B741EE50DAB05F19C186CEF"
+          }
+        },
+        {
+          "client_id": "302531211253-07i6eqb4j0ijgap107v8svoubmuithsr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBppRrJQQkOxu8w7nQx74ZINDGte-M1fuI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "302531211253-07i6eqb4j0ijgap107v8svoubmuithsr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
