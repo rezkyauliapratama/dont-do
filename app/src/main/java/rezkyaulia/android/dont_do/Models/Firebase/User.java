@@ -1,4 +1,4 @@
-package rezkyaulia.android.dont_do.Models;
+package rezkyaulia.android.dont_do.Models.Firebase;
 
 import com.google.firebase.database.IgnoreExtraProperties;
 

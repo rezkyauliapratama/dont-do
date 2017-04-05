@@ -1,6 +1,7 @@
 package rezkyaulia.android.dont_do;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,10 +11,15 @@ import android.view.Window;
 import android.widget.LinearLayout;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import rezkyaulia.android.dont_do.Models.Activity.Activity;
+import rezkyaulia.android.dont_do.Models.Firebase.Activity;
+import rezkyaulia.android.dont_do.Models.Firebase.DetailActivity;
 import rezkyaulia.android.dont_do.databinding.ActivityMainBinding;
 import rezkyaulia.android.dont_do.databinding.DialogAddActivityBinding;
 import timber.log.Timber;
@@ -26,6 +32,8 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
 
     private FirebaseRecyclerAdapter mFirebaseAdapter;
 
+    Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,10 +42,12 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
 
         mProgressBarInflate = new ProgressBarInflate(this,binding.activityMain);
 
+        mContext = this;
+
         init();
 
-//        setAdapterRv();
-        /*mDatabase.child("users").orderByChild("token").equalTo(token).addListenerForSingleValueEvent(new ValueEventListener() {
+        setAdapterRv();
+       /* mDatabase.child("users").orderByChild("token").equalTo(token).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.exists()){
@@ -51,27 +61,67 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
                 Timber.e(databaseError.getMessage()+"");
             }
         });
-*//*
-        *//*mDatabase.child(Constant.instanceOf().ACTIVITIES).orderByChild(userKey).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.exists()){
-                   for (DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
-                       Activity activity= messageSnapshot.getValue(Activity.class);
-                       Timber.e("Activity : "+activity.getName());
-                   }
-                }else{
+*/
+        mDatabase.child(Constant.instanceOf().ACTIVITIES).child(userKey).orderByChild("active").equalTo(true).addChildEventListener(new ChildEventListener() {
 
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                if (dataSnapshot.exists()){
+                    mDatabase.child(Constant.instanceOf().DETAILS).child(dataSnapshot.getKey()).orderByChild("timestamp").addChildEventListener(new ChildEventListener() {
+                                    @Override
+                                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                        if (dataSnapshot.exists()){
+                                            Timber.e("datasnapshot : " + dataSnapshot.getValue()+"");
+                                        }else{
+                                            Timber.e("! exist");
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                    }
+
+                                    @Override
+                                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                    }
+
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+
+                                    }
+                                }
+                );
+                }else{
+                    Timber.e("! exist");
                 }
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
 
             }
 
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
 
-        });*/
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,9 +129,7 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
                 customDialog();
             }
         });
-
     }
-
 
     @Override
     public void onResume() {
@@ -92,7 +140,6 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
     public void onDestroy(){
         super.onDestroy();
         mFirebaseAdapter.cleanup();
-
     }
 
     private void init(){
@@ -101,8 +148,6 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
             mProgressBarInflate.setTitle("initialize");
         }
     }
-
-
 
     @Override
     public void onRefreshToken(String token) {
@@ -114,20 +159,18 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
                 }
             }
         });
-
-
     }
-
 
    private void setAdapterRv (){
         DatabaseReference activityRef = mDatabase.child(Constant.instanceOf().ACTIVITIES).child(userKey);
         mFirebaseAdapter = new FirebaseRecyclerAdapter<Activity, ActivityRvAdapter>
                 (Activity.class, R.layout.list_item_task, ActivityRvAdapter.class,
-                        activityRef) {
+                        activityRef.orderByPriority()) {
 
             @Override
             protected void populateViewHolder(ActivityRvAdapter viewHolder, Activity model, int position) {
-                viewHolder.bind(model);
+                String key = this.getRef(position).getKey();
+                viewHolder.bind(key,model);
             }
         };
 
@@ -150,16 +193,26 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
             @Override
             public void onClick(View v) {
                 String text = dialogBinding.edit01.getText().toString();
-//                DateActivity date = ;
+//                DateModel date = ;
 
                 if (!text.isEmpty()) {
                     Activity activity = new Activity(text);
-                    Timber.e("gson : "+ new Gson().toJson(activity));
 
-                    mDatabase.child(Constant.instanceOf().ACTIVITIES).child(userKey).push().setValue(activity);
+                    DatabaseReference activityRef = constant.PrimaryRef.child(userKey).push();
+                    activityRef.setValue(activity);
+                    String key = activityRef.getKey();
+
+                    Constant.instanceOf().PrimaryRef.child(userKey).child(key).setPriority(-(activity.date.getTimestamp()));
+
+                    if (!key.isEmpty()){
+                        DetailActivity detailActivity = new DetailActivity(activity.date);
+                        DatabaseReference detailPref = Constant.instanceOf().SecondaryPref.child(key).push();
+                        detailPref.setValue(detailActivity);
+                        String keyDetail = detailPref.getKey();
+                        constant.SecondaryPref.child(key).child(keyDetail).setPriority(-(detailActivity.date.getTimestamp()));
+                    }
                     dialog.hide();
                 }
-
             }
         });
 

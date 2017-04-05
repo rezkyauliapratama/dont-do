@@ -11,7 +11,7 @@ import android.util.Log;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import rezkyaulia.android.dont_do.Models.User;
+import rezkyaulia.android.dont_do.Models.Firebase.User;
 import rezkyaulia.android.dont_do.Utility.Util;
 import rx.Observer;
 import rx.Subscription;
@@ -30,7 +30,7 @@ public abstract class BaseActivity extends AppCompatActivity  {
     protected DatabaseReference mDatabase;
     protected Constant constant;
 
-
+    Context mContext;
     private onListener mListener;
     private Subscription mSubs;
 
@@ -40,13 +40,13 @@ public abstract class BaseActivity extends AppCompatActivity  {
         super.onCreate(savedInstanceState);
         mListener = (onListener) this;
 
+        mContext = this;
+
         pref = PreferencesManager.getInstance();
         util = Util.getInstance();
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mDatabase.keepSynced(true);
-
         token = pref.getToken();
         userKey = pref.getUserKey();
 
@@ -56,10 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity  {
 
         getTokenObservable();
 
-
-
     }
-
 
     private void getTokenObservable(){
         mSubs = eventBus.instanceOf().getTokenObservable().
