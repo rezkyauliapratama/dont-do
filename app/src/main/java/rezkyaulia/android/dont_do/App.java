@@ -4,9 +4,12 @@ import android.app.Application;
 import android.content.Context;
 import android.view.ViewConfiguration;
 
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.lang.reflect.Field;
 
 import rezkyaulia.android.dont_do.Utility.Util;
+import rezkyaulia.android.dont_do.services.ReminderEventReceiver;
 import timber.log.Timber;
 
 /**
@@ -34,6 +37,9 @@ public class App extends Application
         /*initialize*/
         init();
 
+        new ReminderEventReceiver().setupAlarm(getApplicationContext());
+
+
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
             Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
@@ -54,6 +60,9 @@ public class App extends Application
         eventBus.instanceOf();
         Foreground.get(this).addListener(myListener);
         initTimber();
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
     }
 
     private void initTimber(){

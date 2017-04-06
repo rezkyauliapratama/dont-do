@@ -3,7 +3,9 @@
     package="rezkyaulia.android.dont_do">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -37,6 +39,21 @@
             </intent-filter>
         </service>
         <!-- [END firebase_iid_service] -->
+
+        <service
+            android:name=".services.ReminderIntentService"
+            android:enabled="true"
+            android:exported="false" />
+
+        <receiver android:name=".services.ReminderEventReceiver" />
+        <receiver android:name=".services.ReminderServiceStarterReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+            </intent-filter>
+        </receiver>
+
 
     </application>
 

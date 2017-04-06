@@ -8,8 +8,8 @@ import rx.subjects.PublishSubject;
  */
 
 public class eventBus {
-
     private static eventBus mInstance;
+
     private PublishSubject<String> mSubject = PublishSubject.create();
 
     public static eventBus instanceOf() {

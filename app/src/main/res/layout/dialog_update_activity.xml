@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit01"
+            android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
+            android:hint="Date"
+            android:ems="5"
+            android:focusable="false"/>
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="add"
+            android:id="@+id/button"/>
+    </LinearLayout>
+
+</layout>
