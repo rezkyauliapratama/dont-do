@@ -2,9 +2,11 @@ package rezkyaulia.android.dont_do;
 
 import android.app.Application;
 import android.content.Context;
+import android.os.StrictMode;
 import android.view.ViewConfiguration;
 
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.leakcanary.LeakCanary;
 
 import java.lang.reflect.Field;
 
@@ -61,8 +63,24 @@ public class App extends Application
         Foreground.get(this).addListener(myListener);
         initTimber();
 
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        enabledStrictMode();
+        LeakCanary.install(this);
+
         FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
+    }
+
+    private static void enabledStrictMode() {
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
+                .detectAll() //
+                .penaltyLog() //
+                .penaltyDeath() //
+                .build());
     }
 
     private void initTimber(){

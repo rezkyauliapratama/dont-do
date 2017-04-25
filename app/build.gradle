@@ -40,6 +40,11 @@ dependencies {
     compile 'com.jakewharton.timber:timber:4.5.1'
     compile 'com.google.code.gson:gson:2.8.0'
 
+
+    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
 }
 
 apply plugin: 'com.google.gms.google-services'

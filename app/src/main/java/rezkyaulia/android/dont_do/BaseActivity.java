@@ -10,6 +10,8 @@ import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import rezkyaulia.android.dont_do.Models.Firebase.User;
 import rezkyaulia.android.dont_do.Utility.Util;
@@ -128,6 +130,5 @@ public abstract class BaseActivity extends AppCompatActivity  {
     public interface onListener {
         void onRefreshToken(String token);
     }
-
 
 }
