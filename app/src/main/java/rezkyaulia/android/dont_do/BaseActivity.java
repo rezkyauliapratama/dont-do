@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
@@ -12,6 +13,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+
+import java.util.List;
 
 import rezkyaulia.android.dont_do.Models.Firebase.User;
 import rezkyaulia.android.dont_do.Utility.Util;
@@ -126,6 +129,45 @@ public abstract class BaseActivity extends AppCompatActivity  {
 
         }
     };
+
+    @Override
+    public void startActivity(Intent intent) {
+        super.startActivity(intent);
+        overridePendingTransition(R.anim.zoom_in, R.anim.fade_out);
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.fade_in, R.anim.zoom_out);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+//        overridePendingTransition(R.anim.do_nothing, R.anim.slid_right);
+    }
+
+    /*fragment control*/
+    public void addFragment(int id, Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().add(id, fragment).commit();
+
+    }
+
+    public void displayFragment(int id, Fragment fragment) {
+        try {
+            getSupportFragmentManager().beginTransaction().replace(id, fragment).commitAllowingStateLoss();
+        } catch (Exception e) {
+
+        }
+
+    }
+
+    public void removeFragment(int id, Fragment fragment) {
+        getSupportFragmentManager().beginTransaction().remove(fragment).commit();
+    }
+
+
 
     public interface onListener {
         void onRefreshToken(String token);

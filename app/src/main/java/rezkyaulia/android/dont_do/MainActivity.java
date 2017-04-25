@@ -2,6 +2,7 @@ package rezkyaulia.android.dont_do;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -126,7 +127,9 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                customDialog();
+//                customDialog();
+
+                startActivity(new Intent(getBaseContext(),DetailTaskActivity.class));
             }
         });
     }

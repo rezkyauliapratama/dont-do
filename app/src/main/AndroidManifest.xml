@@ -21,7 +21,11 @@
             </intent-filter>
         </activity>
 
-
+        <activity
+            android:name=".DetailTaskActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateVisible|adjustResize|stateAlwaysHidden" />
 
         <!-- [START firebase_service] -->
         <service
