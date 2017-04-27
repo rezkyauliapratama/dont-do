@@ -10,6 +10,15 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit01"/>
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/edit02"
+            android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
+            android:hint="Date"
+            android:ems="5"
+            android:focusable="false"/>
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.StrictMode;
 import android.view.ViewConfiguration;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.leakcanary.LeakCanary;
 
@@ -57,6 +58,9 @@ public class App extends Application
     }
 
     private void init(){
+        FirebaseApp.initializeApp(this);
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
         PreferencesManager.init(this);
         Util.init(this);
         eventBus.instanceOf();
@@ -69,9 +73,8 @@ public class App extends Application
             return;
         }
 //        enabledStrictMode();
-        LeakCanary.install(this);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        LeakCanary.install(this);
 
     }
 

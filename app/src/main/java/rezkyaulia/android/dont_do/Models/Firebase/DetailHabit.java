@@ -6,15 +6,15 @@ import rezkyaulia.android.dont_do.Utility.Util;
  * Created by User on 30/3/2017.
  */
 
-public class DetailActivity {
+public class DetailHabit {
     public DateModel date;
 
-    public DetailActivity() {
+    public DetailHabit() {
         this.date = Util.getInstance().dateUtil().getDate();
 
     }
 
-    public DetailActivity(DateModel dateModel) {
+    public DetailHabit(DateModel dateModel) {
         this.date = dateModel;
     }
 

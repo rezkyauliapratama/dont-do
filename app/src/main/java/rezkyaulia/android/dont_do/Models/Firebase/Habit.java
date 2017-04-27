@@ -8,30 +8,28 @@ import rezkyaulia.android.dont_do.Utility.Util;
  * Created by Mutya Nayavashti on 21/02/2017.
  */
 
-public class Activity {
+public class Habit {
     @Exclude
     public String activityKey;
 
     public String name;
     public boolean active;
-    public DateModel date;
-    public Activity(){
+    public Habit(){
 
     }
 
-    public Activity(String name) {
+    public Habit(String name) {
         this.name = name;
         this.active = true;
-        this.date = Util.getInstance().dateUtil().getDate();
     }
 
-    public Activity(String activityKey,String name) {
+    public Habit(String activityKey, String name) {
         this.activityKey = activityKey;
         this.name = name;
         this.active = true;
     }
 
-    public Activity(String name, boolean active) {
+    public Habit(String name, boolean active) {
         this.name = name;
         this.active = active;
     }
@@ -54,12 +52,6 @@ public class Activity {
         this.active = active;
     }
 
-    public DateModel getDate() {
-        return date;
-    }
 
-    public void setDate(DateModel date) {
-        this.date = date;
-    }
 }
 

@@ -6,18 +6,19 @@
         android:id="@+id/cardview"
         android:orientation="vertical" android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_vertical_margin">
+        android:layout_margin="@dimen/margin_small">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:padding="@dimen/margin_normal">
 
         <TextView
             android:id="@+id/text_01"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title"/>
+            android:text="text01"
+            android:textAppearance="@style/TextStyle.Medium"/>
 
         <TextView
             android:id="@+id/text_02"
@@ -25,7 +26,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:text="Date"/>
+            android:text="text02"
+            android:textAppearance="@style/TextStyle.Medium"/>
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
