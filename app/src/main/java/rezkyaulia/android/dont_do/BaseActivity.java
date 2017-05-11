@@ -109,6 +109,7 @@ public abstract class BaseActivity extends AppCompatActivity  {
     public void onDestroy(){
         super.onDestroy();
         mSubs.unsubscribe();
+
     }
 
     @Override

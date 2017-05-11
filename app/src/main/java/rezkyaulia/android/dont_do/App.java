@@ -8,6 +8,7 @@ import android.view.ViewConfiguration;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.leakcanary.LeakCanary;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.lang.reflect.Field;
 
@@ -74,9 +75,11 @@ public class App extends Application
         }
 //        enabledStrictMode();
 
-        LeakCanary.install(this);
+        refWatcher = LeakCanary.install(this);
 
     }
+
+
 
     private static void enabledStrictMode() {
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
@@ -92,6 +95,12 @@ public class App extends Application
 //        }
     }
 
+    public static RefWatcher getRefWatcher(Context context) {
+        App application = (App) context.getApplicationContext();
+        return application.refWatcher;
+    }
+
+    private RefWatcher refWatcher;
 
     Foreground.Listener myListener = new Foreground.Listener()
     {
