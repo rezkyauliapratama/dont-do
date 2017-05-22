@@ -1,4 +1,4 @@
-package rezkyaulia.android.dont_do;
+package rezkyaulia.android.dont_do.controller.adapter;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -18,9 +18,13 @@ import com.google.firebase.database.Query;
 
 import java.util.Calendar;
 
-import rezkyaulia.android.dont_do.Models.Firebase.Habit;
-import rezkyaulia.android.dont_do.Models.Firebase.DateModel;
-import rezkyaulia.android.dont_do.Models.Firebase.DetailHabit;
+import rezkyaulia.android.dont_do.Constant;
+import rezkyaulia.android.dont_do.FirebaseEvent;
+import rezkyaulia.android.dont_do.Model.Firebase.Habit;
+import rezkyaulia.android.dont_do.Model.Firebase.DateModel;
+import rezkyaulia.android.dont_do.Model.Firebase.DetailHabit;
+import rezkyaulia.android.dont_do.PreferencesManager;
+import rezkyaulia.android.dont_do.R;
 import rezkyaulia.android.dont_do.Utility.Util;
 import rezkyaulia.android.dont_do.databinding.DialogUpdateActivityBinding;
 import rezkyaulia.android.dont_do.databinding.ListItemTaskBinding;

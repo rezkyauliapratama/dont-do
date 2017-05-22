@@ -1,4 +1,4 @@
-package rezkyaulia.android.dont_do.services;
+package rezkyaulia.android.dont_do.controller.service;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

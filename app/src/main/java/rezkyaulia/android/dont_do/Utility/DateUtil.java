@@ -8,7 +8,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import rezkyaulia.android.dont_do.Models.Firebase.DateModel;
+import rezkyaulia.android.dont_do.Model.Firebase.DateModel;
 import timber.log.Timber;
 
 /**
@@ -22,7 +22,7 @@ public class DateUtil {
 
     public DateModel getDate() {
         Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.setTimeInMillis(System.currentTimeMillis());
         calendar.set(Calendar.HOUR_OF_DAY,0);
         calendar.set(Calendar.MINUTE,0);
         calendar.set(Calendar.SECOND,0);
@@ -34,9 +34,13 @@ public class DateUtil {
         return formatFirebaseDate(cal);
     }
     private DateModel formatFirebaseDate(Calendar cal) {
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.UK);
 
-        DateModel dte = new DateModel(cal.get(Calendar.DAY_OF_MONTH),cal.get(Calendar.MONTH),cal.get(Calendar.YEAR),cal.getTimeInMillis());
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+        int month = cal.get(Calendar.MONTH);
+        int year = cal.get(Calendar.YEAR);
+        long timestamp = cal.getTimeInMillis();
+
+        DateModel dte = new DateModel(day,month,year,timestamp);
         return dte;
     }
 
@@ -54,17 +58,14 @@ public class DateUtil {
     public String getHowLongItHasBeen(DateModel dateModel){
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(dateModel.getTimestamp());
+        Timber.e("DATE : "+getUserFriendlyDate(cal.getTime()));
         return calculateHowLongItHasBeen(cal);
     }
 
     public long getTriggerEveryHours(){
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MINUTE,1);
-
-        Timber.e("trigger : " +getUserFriendlyDate(cal.getTime()));
-
         return cal.getTimeInMillis();
-
     }
     private String calculateHowLongItHasBeen(Calendar cal){
         Calendar calNow = Calendar.getInstance();

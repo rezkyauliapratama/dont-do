@@ -1,9 +1,9 @@
-package rezkyaulia.android.dont_do;
+package rezkyaulia.android.dont_do.controller.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 
-import rezkyaulia.android.dont_do.BaseActivity;
+import rezkyaulia.android.dont_do.R;
 import rezkyaulia.android.dont_do.databinding.ActivityDetailTaskBinding;
 
 /**

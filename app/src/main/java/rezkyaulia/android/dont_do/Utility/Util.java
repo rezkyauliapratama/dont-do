@@ -5,7 +5,7 @@ import android.content.Context;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.iid.FirebaseInstanceId;
 
-import rezkyaulia.android.dont_do.Models.Firebase.User;
+import rezkyaulia.android.dont_do.Model.Firebase.User;
 
 /**
  * Created by Mutya Nayavashti on 06/11/2016.

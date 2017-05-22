@@ -1,4 +1,4 @@
-package rezkyaulia.android.dont_do.services; /**
+package rezkyaulia.android.dont_do.controller.service; /**
  * Copyright 2016 Google Inc. All Rights Reserved.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,7 +27,7 @@ import android.util.Log;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
-import rezkyaulia.android.dont_do.MainActivity;
+import rezkyaulia.android.dont_do.controller.activity.MainActivity;
 
 public class _FirebaseMessagingService extends FirebaseMessagingService {
 

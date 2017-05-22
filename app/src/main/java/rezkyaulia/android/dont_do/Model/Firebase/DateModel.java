@@ -1,4 +1,4 @@
-package rezkyaulia.android.dont_do.Models.Firebase;
+package rezkyaulia.android.dont_do.Model.Firebase;
 
 /**
  * Created by Mutya Nayavashti on 13/03/2017.

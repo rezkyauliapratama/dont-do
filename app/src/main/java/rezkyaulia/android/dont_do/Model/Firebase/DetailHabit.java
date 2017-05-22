@@ -1,4 +1,4 @@
-package rezkyaulia.android.dont_do.Models.Firebase;
+package rezkyaulia.android.dont_do.Model.Firebase;
 
 import rezkyaulia.android.dont_do.Utility.Util;
 

@@ -1,4 +1,4 @@
-package rezkyaulia.android.dont_do;
+package rezkyaulia.android.dont_do.controller.activity;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -18,9 +18,14 @@ import com.google.gson.Gson;
 
 import java.util.Calendar;
 
-import rezkyaulia.android.dont_do.Models.Firebase.Habit;
-import rezkyaulia.android.dont_do.Models.Firebase.DateModel;
-import rezkyaulia.android.dont_do.Models.Firebase.DetailHabit;
+import rezkyaulia.android.dont_do.controller.adapter.ActivityRvAdapter;
+import rezkyaulia.android.dont_do.Constant;
+import rezkyaulia.android.dont_do.Model.Firebase.Habit;
+import rezkyaulia.android.dont_do.Model.Firebase.DateModel;
+import rezkyaulia.android.dont_do.Model.Firebase.DetailHabit;
+import rezkyaulia.android.dont_do.PreferencesManager;
+import rezkyaulia.android.dont_do.ProgressBarInflate;
+import rezkyaulia.android.dont_do.R;
 import rezkyaulia.android.dont_do.Utility.Util;
 import rezkyaulia.android.dont_do.databinding.ActivityMainBinding;
 import rezkyaulia.android.dont_do.databinding.DialogAddActivityBinding;
@@ -227,7 +232,7 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                c.set(year,monthOfYear,dayOfMonth);
+                                c.set(year,monthOfYear,dayOfMonth,0,0);
                                 dateModel[0] = Util.getInstance().dateUtil().getDate(c);
                                 dialogBinding.edit02.setText(Util.getInstance().dateUtil().getDateFromFirebase(dateModel[0]));
 

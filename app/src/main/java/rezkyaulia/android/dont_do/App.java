@@ -13,7 +13,7 @@ import com.squareup.leakcanary.RefWatcher;
 import java.lang.reflect.Field;
 
 import rezkyaulia.android.dont_do.Utility.Util;
-import rezkyaulia.android.dont_do.services.ReminderEventReceiver;
+import rezkyaulia.android.dont_do.controller.service.ReminderEventReceiver;
 import timber.log.Timber;
 
 /**

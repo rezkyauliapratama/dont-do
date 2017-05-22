@@ -1,4 +1,4 @@
-package rezkyaulia.android.dont_do;
+package rezkyaulia.android.dont_do.controller.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,13 +11,13 @@ import android.util.Log;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.leakcanary.LeakCanary;
-import com.squareup.leakcanary.RefWatcher;
 
-import java.util.List;
-
-import rezkyaulia.android.dont_do.Models.Firebase.User;
+import rezkyaulia.android.dont_do.Constant;
+import rezkyaulia.android.dont_do.Model.Firebase.User;
+import rezkyaulia.android.dont_do.PreferencesManager;
+import rezkyaulia.android.dont_do.R;
 import rezkyaulia.android.dont_do.Utility.Util;
+import rezkyaulia.android.dont_do.eventBus;
 import rx.Observer;
 import rx.Subscription;
 import timber.log.Timber;

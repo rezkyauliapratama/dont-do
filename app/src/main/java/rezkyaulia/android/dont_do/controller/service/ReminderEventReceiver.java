@@ -1,4 +1,4 @@
-package rezkyaulia.android.dont_do.services;
+package rezkyaulia.android.dont_do.controller.service;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
