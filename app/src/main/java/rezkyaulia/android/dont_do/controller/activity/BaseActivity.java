@@ -57,14 +57,14 @@ public abstract class BaseActivity extends AppCompatActivity  {
 
         Timber.e("token : "+token);
         Timber.e("userKey : "+userKey);
-        constant = Constant.instanceOf();
+        constant = Constant.getInstance();
 
         getTokenObservable();
 
     }
 
     private void getTokenObservable(){
-        mSubs = eventBus.instanceOf().getTokenObservable().
+        mSubs = eventBus.instanceOf().getObservable().
                 subscribe(new Observer<String>() {
                     @Override
                     public void onCompleted() {
@@ -84,7 +84,7 @@ public abstract class BaseActivity extends AppCompatActivity  {
 
                         if (isSave){
                             User usr = new User(s);
-                            DatabaseReference newRef = mDatabase.child(Constant.instanceOf().USERS).push();
+                            DatabaseReference newRef = mDatabase.child(Constant.getInstance().USERS).push();
                             newRef.setValue(usr);
 
                             token = s;

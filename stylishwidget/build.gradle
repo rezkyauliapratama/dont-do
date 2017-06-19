@@ -1,0 +1,54 @@
+apply plugin: 'com.android.library'
+ext{
+    PUBLISH_GROUP_ID= 'com.app.infideap.stylishwidget'
+    PUBLISH_ARTIFACT_ID= 'stylish-widget'
+    PUBLISH_VERSION= '1.1.2'
+}
+android {
+    compileSdkVersion 25
+    buildToolsVersion '25.0.2'
+
+    defaultConfig {
+
+        minSdkVersion 9
+        targetSdkVersion 25
+        versionCode 3
+        versionName "1.1.2"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    lintOptions {
+        abortOnError false
+        checkReleaseBuilds false
+    }
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:design:25.3.1'
+    compile 'com.nineoldandroids:library:2.4.0'
+}
+apply from: 'https://raw.githubusercontent.com/blundell/release-android-library/' +
+        'master/android-release-aar.gradle'
+// This is the actual solution, as in http://stackoverflow.com/a/19037807/1002054
+task clearJar(type: Delete) {
+    delete 'build/libs/stylishwidget1.0.4.jar'
+}
+
+task makeJar(type: Copy) {
+    from('build/intermediates/bundles/release/')
+    into('jar/')
+    include('classes.jar')
+    rename ('classes.jar', 'stylishwidget1.0.4.jar')
+}
+
+makeJar.dependsOn(clearJar, build)
+
+

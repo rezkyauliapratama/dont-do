@@ -38,7 +38,7 @@ public class _FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
         Timber.e("refreshedToken : " + refreshedToken);
 
-        eventBus.instanceOf().setToken(refreshedToken);
+        eventBus.instanceOf().setObservable(refreshedToken);
 
     }
     // [END refresh_token]

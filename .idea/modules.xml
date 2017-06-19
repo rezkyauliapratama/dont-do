@@ -4,6 +4,8 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/dont-do.iml" filepath="$PROJECT_DIR$/dont-do.iml" />
+      <module fileurl="file://$PROJECT_DIR$/materialview/materialview.iml" filepath="$PROJECT_DIR$/materialview/materialview.iml" />
+      <module fileurl="file://$PROJECT_DIR$/stylishwidget/stylishwidget.iml" filepath="$PROJECT_DIR$/stylishwidget/stylishwidget.iml" />
     </modules>
   </component>
 </project>

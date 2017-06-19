@@ -4,31 +4,61 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/cardview"
-        android:orientation="vertical" android:layout_width="match_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/margin_small">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="@dimen/margin_normal">
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/text_01"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="text01"
-            android:textAppearance="@style/TextStyle.Medium"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_small">
+                <com.rezkyaulia.materialview.TextView
+                    android:id="@+id/text_01"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/empty"
+                    android:textAppearance="@style/TextStyle.Medium"/>
 
-        <TextView
-            android:id="@+id/text_02"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:text="text02"
-            android:textAppearance="@style/TextStyle.Medium"/>
-        </RelativeLayout>
+                <com.rezkyaulia.materialview.TextView
+                    android:id="@+id/text_02"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/empty"
+                    android:textAppearance="@style/TextStyle.Medium"/>
+
+
+            </LinearLayout>
+
+            <android.support.v4.widget.Space
+                android:layout_width="@dimen/margin_small"
+                android:layout_height="wrap_content" />
+            <FrameLayout
+                android:id="@+id/layout_image"
+                android:layout_width="56dp"
+                android:layout_height="match_parent"
+                android:background="@color/colorPrimaryDark"
+                android:paddingLeft="@dimen/margin_large"
+                android:paddingRight="@dimen/margin_large"
+                >
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_thumb_down"
+                    android:tint="@color/colorWhite"
+                    />
+
+            </FrameLayout>
+
+
+        </LinearLayout>
 
     </android.support.v7.widget.CardView>
 

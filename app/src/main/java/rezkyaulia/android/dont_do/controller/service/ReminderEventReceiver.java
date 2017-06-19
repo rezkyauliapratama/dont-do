@@ -26,7 +26,7 @@ public class ReminderEventReceiver extends WakefulBroadcastReceiver {
 
         Timber.e("ReminderEventReceiver !!!!!");
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-        PendingIntent alarmIntent = getStartPendingIntent(context, Constant.instanceOf().EVERYHOUR_RUNNING_SERVICE);
+        PendingIntent alarmIntent = getStartPendingIntent(context, Constant.getInstance().EVERYHOUR_RUNNING_SERVICE);
 
         int interval  = 1000 * 60 ;
 

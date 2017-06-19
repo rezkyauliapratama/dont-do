@@ -13,16 +13,29 @@ import timber.log.Timber;
 
 public class Constant {
     private static Constant mInstance;
-    public static Constant instanceOf() {
-        if (mInstance == null) {
-            mInstance = new Constant();
+    // Step 1: private static variable of INSTANCE variable
+    private static volatile Constant INSTANCE;
+
+    // Step 2: private constructor
+    private Constant() {
+
+    }
+
+    // Step 3: Provide public static getInstance() method returning INSTANCE after checking
+    public static Constant getInstance() {
+
+        // double-checking lock
+        if(null == INSTANCE){
+
+            // synchronized block
+            synchronized (Constant.class) {
+                if(null == INSTANCE){
+                    INSTANCE = new Constant();
+                }
+            }
         }
-        return mInstance;
+        return INSTANCE;
     }
-
-    public Constant() {
-    }
-
 
     public final String NAME_PREF = "app";
     public final String TOKEN_PREF = "token";

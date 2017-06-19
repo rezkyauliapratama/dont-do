@@ -32,7 +32,7 @@ public class PreferencesManager {
     private boolean saveToSharedPref(HashMap<String,String> map){
 
         if (!map.isEmpty() && map != null){
-            SharedPreferences prefs= mContext.getSharedPreferences(Constant.instanceOf().NAME_PREF, mContext.MODE_PRIVATE);
+            SharedPreferences prefs= mContext.getSharedPreferences(Constant.getInstance().NAME_PREF, mContext.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
 
             for(Map.Entry<String, String> item: map.entrySet()) {
@@ -49,21 +49,21 @@ public class PreferencesManager {
 
 
     private String getSharedPref(String name){
-        SharedPreferences prefs= mContext.getSharedPreferences(Constant.instanceOf().NAME_PREF, mContext.MODE_PRIVATE);
+        SharedPreferences prefs= mContext.getSharedPreferences(Constant.getInstance().NAME_PREF, mContext.MODE_PRIVATE);
         String pref=prefs.getString(name, "");
         return pref;
     }
 
     public String getToken(){
-        return (getSharedPref(Constant.instanceOf().TOKEN_PREF) != null) ? getSharedPref(Constant.instanceOf().TOKEN_PREF) : "";
+        return (getSharedPref(Constant.getInstance().TOKEN_PREF) != null) ? getSharedPref(Constant.getInstance().TOKEN_PREF) : "";
     }
 
     public boolean saveToken(String token){
         HashMap<String, String> map = new HashMap<>();
-        map.put(Constant.instanceOf().TOKEN_PREF, token);
+        map.put(Constant.getInstance().TOKEN_PREF, token);
         boolean b = saveToSharedPref(map);
 
-        if (!getSharedPref(Constant.instanceOf().EMAIL).isEmpty()){
+        if (!getSharedPref(Constant.getInstance().EMAIL).isEmpty()){
 
         }else{
 
@@ -74,12 +74,12 @@ public class PreferencesManager {
 
 
     public String getUserKey(){
-        return (getSharedPref(Constant.instanceOf().USER_KEY_PREF) != null) ? getSharedPref(Constant.instanceOf().USER_KEY_PREF) : "";
+        return (getSharedPref(Constant.getInstance().USER_KEY_PREF) != null) ? getSharedPref(Constant.getInstance().USER_KEY_PREF) : "";
     }
 
     public boolean saveUserKey(String userKey){
         HashMap<String, String> map = new HashMap<>();
-        map.put(Constant.instanceOf().USER_KEY_PREF, userKey);
+        map.put(Constant.getInstance().USER_KEY_PREF, userKey);
         boolean b = saveToSharedPref(map);
 
 

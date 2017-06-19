@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="propertiesAttr">
+        <attr name="sw_message" format="string"/>
+        <attr name="sw_innerPadding" format="dimension" />
+        <attr name="sw_innerLeftPadding" format="dimension" />
+        <attr name="sw_innerTopPadding" format="dimension" />
+        <attr name="sw_innerRightPadding" format="dimension" />
+        <attr name="sw_innerBottomPadding" format="dimension" />
+        <attr name="sw_drawable" format="reference" />
+        <attr name="sw_drawablePadding" format="dimension" />
+        <attr name="sw_boxBackground" format="color" />
+    </declare-styleable>
+    <declare-styleable name="progressAttr">
+        <attr name="sw_radius" format="dimension" />
+        <attr name="sw_progressColor" format="color" />
+        <attr name="sw_progressText" format="string" />
+        <attr name="sw_progressTextSize" format="dimension" />
+        <attr name="sw_progressTextStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+        </attr>
+        <attr name="sw_progressValue" format="float" />
+        <attr name="sw_progressPadding" format="dimension" />
+        <attr name="sw_progressIconPadding" format="dimension" />
+        <attr name="sw_withAnimation" format="boolean" />
+        <attr name="sw_duration" format="integer"/>
+        <attr name="sw_progressTextAppearance" format="reference"/>
+        <attr name="sw_progressBackground" format="color"/>
+        <attr name="sw_progressIcon" format="reference"/>
+    </declare-styleable>
+    <declare-styleable name="meterAttr">
+        <attr name="sw_meterColor" format="color" />
+        <attr name="sw_lineStrokeSize" format="dimension" />
+        <attr name="sw_lineWidth" format="float" />
+        <attr name="sw_showNeedle" format="boolean" />
+    </declare-styleable>
+
+    <declare-styleable name="textAttr">
+        <attr name="sw_textSize" format="dimension" />
+        <attr name="sw_textStyle" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="bold" value="1" />
+            <enum name="italic" value="2" />
+        </attr>
+    </declare-styleable>
+
+    <declare-styleable name="constraintAttr">
+        <attr name="sw_startValue" format="float" />
+        <attr name="sw_value" format="float" />
+        <attr name="sw_unit" format="string" />
+        <attr name="sw_showText" format="boolean"/>
+        <attr name="sw_maxValue" format="float" />
+        <attr name="sw_numberOfLine" format="integer" />
+    </declare-styleable>
+</resources>

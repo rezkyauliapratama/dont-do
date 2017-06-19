@@ -22,13 +22,6 @@ import timber.log.Timber;
 
 public class App extends Application
 {
-    private  Context mContext;
-
-    public static final String TAG = App.class
-            .getSimpleName();
-
-
-
 
     @Override
     public void onCreate()
@@ -36,7 +29,6 @@ public class App extends Application
         super.onCreate();
 
 
-        mContext = this;
 
         /*initialize*/
         init();
@@ -68,31 +60,19 @@ public class App extends Application
         Foreground.get(this).addListener(myListener);
         initTimber();
 
-        if (LeakCanary.isInAnalyzerProcess(this)) {
+      /*  if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.
             return;
         }
-//        enabledStrictMode();
-
-        refWatcher = LeakCanary.install(this);
+        refWatcher = LeakCanary.install(this);*/
 
     }
 
 
-
-    private static void enabledStrictMode() {
-        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder() //
-                .detectAll() //
-                .penaltyLog() //
-                .penaltyDeath() //
-                .build());
-    }
 
     private void initTimber(){
-//        if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
-//        }
     }
 
     public static RefWatcher getRefWatcher(Context context) {
@@ -102,27 +82,15 @@ public class App extends Application
 
     private RefWatcher refWatcher;
 
+
     Foreground.Listener myListener = new Foreground.Listener()
     {
         public void onBecameForeground()
         {
-            /*String token = pref.getSharedPref(Constant.TOKEN_PREF);
-
-            if (token.isEmpty()){
-                token = FirebaseInstanceId.getInstance().getToken();
-                Log.e(TAG,token);
-                if (!token.isEmpty()){
-                    HashMap<String,String> item = new HashMap<>();
-                    item.put(Constant.TOKEN_PREF,token);
-                    pref.saveToSharedPref(item);
-                }
-            }
-*/
         }
 
         public void onBecameBackground()
         {
-//            GcmService.setNotifPopUp(true);
         }
     };
 

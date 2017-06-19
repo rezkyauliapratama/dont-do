@@ -7,10 +7,10 @@ import rx.subjects.PublishSubject;
  * Created by Mutya Nayavashti on 02/01/2017.
  */
 
-public class eventBus {
+public class eventBus<T> {
     private static eventBus mInstance;
 
-    private PublishSubject<String> mSubject = PublishSubject.create();
+    private PublishSubject<T> mSubject = PublishSubject.create();
 
     public static eventBus instanceOf() {
         if (mInstance == null) {
@@ -22,14 +22,14 @@ public class eventBus {
     /**
      * Pass a String down to event listeners.
      */
-    public void setToken(String string) {
-        mSubject.onNext(string);
+    public void setObservable(T object) {
+        mSubject.onNext(object);
     }
 
     /**
      * Subscribe to this Observable. On event, do something e.g. replace a fragment
      */
-    public Observable<String> getTokenObservable() {
+    public Observable<T> getObservable() {
         return mSubject;
     }
 }

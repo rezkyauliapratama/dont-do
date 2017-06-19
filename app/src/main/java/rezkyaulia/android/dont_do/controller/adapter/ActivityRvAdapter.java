@@ -48,7 +48,7 @@ public class ActivityRvAdapter  extends RecyclerView.ViewHolder {
     public void bind(final String key, Habit item){
         binding.text01.setText(item.getName());
 
-        Query query = FirebaseDatabase.getInstance().getReference().child(Constant.instanceOf().DETAILS).child(key).orderByPriority().limitToFirst(1);
+        Query query = FirebaseDatabase.getInstance().getReference().child(Constant.getInstance().DETAILS).child(key).orderByPriority().limitToFirst(1);
         FirebaseEvent event = new FirebaseEvent(query);
         event.addChildEventListener(new FirebaseEvent.onChildEventListener() {
             @Override
@@ -122,12 +122,12 @@ public class ActivityRvAdapter  extends RecyclerView.ViewHolder {
             @Override
             public void onClick(View v) {
                 DetailHabit detailHabit = new DetailHabit(Util.getInstance().dateUtil().getDate(c));
-                DatabaseReference save  = Constant.instanceOf().SecondaryPref.child(key).push();
+                DatabaseReference save  = Constant.getInstance().SecondaryPref.child(key).push();
                 save.setValue(detailHabit);
                 String saveKey = save.getKey();
 
-                Constant.instanceOf().SecondaryPref.child(key).child(saveKey).setPriority(-(detailHabit.date.getTimestamp()));
-                Constant.instanceOf().PrimaryRef.child(PreferencesManager.getInstance().getUserKey()).child(key).setPriority(-(detailHabit.date.getTimestamp()));
+                Constant.getInstance().SecondaryPref.child(key).child(saveKey).setPriority(-(detailHabit.date.getTimestamp()));
+                Constant.getInstance().PrimaryRef.child(PreferencesManager.getInstance().getUserKey()).child(key).setPriority(-(detailHabit.date.getTimestamp()));
                 if (!saveKey.isEmpty()){
                     dialog.hide();
                 }
