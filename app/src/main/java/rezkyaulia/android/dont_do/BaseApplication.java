@@ -2,25 +2,29 @@ package rezkyaulia.android.dont_do;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.StrictMode;
 import android.view.ViewConfiguration;
 
+import com.app.infideap.stylishwidget.view.Stylish;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
+
+import org.greenrobot.greendao.database.Database;
 
 import java.lang.reflect.Field;
 
 import rezkyaulia.android.dont_do.Utility.Util;
 import rezkyaulia.android.dont_do.controller.service.ReminderEventReceiver;
+import rezkyaulia.android.dont_do.database.Facade;
+import rezkyaulia.android.dont_do.database.entity.DaoMaster;
+import rezkyaulia.android.dont_do.database.entity.DaoSession;
 import timber.log.Timber;
 
 /**
  * Created by Mutya Nayavashti on 07/11/2016.
  */
 
-public class App extends Application
+public class BaseApplication extends Application
 {
 
     @Override
@@ -57,8 +61,25 @@ public class App extends Application
         PreferencesManager.init(this);
         Util.init(this);
         eventBus.instanceOf();
-        Foreground.get(this).addListener(myListener);
         initTimber();
+
+        String fontFolder = "fonts/Exo_2/Exo2-";
+        Stylish.getInstance().set(
+                fontFolder.concat("Regular.ttf"),
+                fontFolder.concat("Medium.ttf"),
+                fontFolder.concat("RegularItalic.ttf")
+        );
+
+        PreferencesManager.getInstance().saveFontSize(1);
+        Stylish.getInstance().setFontScale(
+                PreferencesManager.getInstance().getFontSize()
+        );
+
+        String databaseName = Constant.getInstance().DB_NAME;
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, databaseName);
+        Database db = helper.getWritableDb();
+        DaoSession daoSession = new DaoMaster(db).newSession();
+        Facade.init(daoSession);
 
       /*  if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -76,23 +97,11 @@ public class App extends Application
     }
 
     public static RefWatcher getRefWatcher(Context context) {
-        App application = (App) context.getApplicationContext();
+        BaseApplication application = (BaseApplication) context.getApplicationContext();
         return application.refWatcher;
     }
 
     private RefWatcher refWatcher;
-
-
-    Foreground.Listener myListener = new Foreground.Listener()
-    {
-        public void onBecameForeground()
-        {
-        }
-
-        public void onBecameBackground()
-        {
-        }
-    };
 
 
 

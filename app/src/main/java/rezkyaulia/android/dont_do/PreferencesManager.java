@@ -15,6 +15,7 @@ public class PreferencesManager {
     private static PreferencesManager mInstance;
     private final Context mContext;
 
+
     public static PreferencesManager init(Context context){
         mInstance = new PreferencesManager(context);
         return mInstance;
@@ -29,7 +30,7 @@ public class PreferencesManager {
     }
 
 
-    private boolean saveToSharedPref(HashMap<String,String> map){
+    private boolean saveToStringPref(HashMap<String,String> map){
 
         if (!map.isEmpty() && map != null){
             SharedPreferences prefs= mContext.getSharedPreferences(Constant.getInstance().NAME_PREF, mContext.MODE_PRIVATE);
@@ -47,23 +48,47 @@ public class PreferencesManager {
         return false;
     }
 
+    private boolean saveToFloatPref(HashMap<String,Float> map){
 
-    private String getSharedPref(String name){
+        if (!map.isEmpty() && map != null){
+            SharedPreferences prefs= mContext.getSharedPreferences(Constant.getInstance().NAME_PREF, mContext.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+
+            for(Map.Entry<String, Float> item: map.entrySet()) {
+                String key = item.getKey();
+                float value = item.getValue();
+                if (!key.isEmpty())
+                    editor.putFloat(key, value);
+
+            }
+            return editor.commit();
+        }
+        return false;
+    }
+
+
+    private String getStringPref(String name){
         SharedPreferences prefs= mContext.getSharedPreferences(Constant.getInstance().NAME_PREF, mContext.MODE_PRIVATE);
         String pref=prefs.getString(name, "");
         return pref;
     }
 
+    private float getFloatPref(String name){
+        SharedPreferences prefs= mContext.getSharedPreferences(Constant.getInstance().NAME_PREF, mContext.MODE_PRIVATE);
+        float pref=prefs.getFloat(name, 0);
+        return pref;
+    }
+
     public String getToken(){
-        return (getSharedPref(Constant.getInstance().TOKEN_PREF) != null) ? getSharedPref(Constant.getInstance().TOKEN_PREF) : "";
+        return (getStringPref(Constant.getInstance().TOKEN_PREF) != null) ? getStringPref(Constant.getInstance().TOKEN_PREF) : "";
     }
 
     public boolean saveToken(String token){
         HashMap<String, String> map = new HashMap<>();
         map.put(Constant.getInstance().TOKEN_PREF, token);
-        boolean b = saveToSharedPref(map);
+        boolean b = saveToStringPref(map);
 
-        if (!getSharedPref(Constant.getInstance().EMAIL).isEmpty()){
+        if (!getStringPref(Constant.getInstance().EMAIL).isEmpty()){
 
         }else{
 
@@ -74,16 +99,30 @@ public class PreferencesManager {
 
 
     public String getUserKey(){
-        return (getSharedPref(Constant.getInstance().USER_KEY_PREF) != null) ? getSharedPref(Constant.getInstance().USER_KEY_PREF) : "";
+        return (getStringPref(Constant.getInstance().USER_KEY_PREF) != null) ? getStringPref(Constant.getInstance().USER_KEY_PREF) : "";
     }
 
     public boolean saveUserKey(String userKey){
         HashMap<String, String> map = new HashMap<>();
         map.put(Constant.getInstance().USER_KEY_PREF, userKey);
-        boolean b = saveToSharedPref(map);
+        boolean b = saveToStringPref(map);
 
 
         return b;
     }
+
+    public float getFontSize(){
+        return getFloatPref(Constant.getInstance().FONT_SIZE_PREF);
+    }
+
+    public boolean saveFontSize(float fontSize){
+        HashMap<String, Float> map = new HashMap<>();
+        map.put(Constant.getInstance().FONT_SIZE_PREF, fontSize);
+        boolean b = saveToFloatPref(map);
+
+
+        return b;
+    }
+
 
 }

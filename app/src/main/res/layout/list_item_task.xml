@@ -19,14 +19,14 @@
                 android:layout_weight="1"
                 android:orientation="vertical"
                 android:padding="@dimen/margin_small">
-                <com.rezkyaulia.materialview.TextView
+                <com.app.infideap.stylishwidget.view.ATextView
                     android:id="@+id/text_01"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/empty"
                     android:textAppearance="@style/TextStyle.Medium"/>
 
-                <com.rezkyaulia.materialview.TextView
+                <com.app.infideap.stylishwidget.view.ATextView
                     android:id="@+id/text_02"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

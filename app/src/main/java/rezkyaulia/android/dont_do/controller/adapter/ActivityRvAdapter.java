@@ -8,6 +8,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 
@@ -35,9 +37,14 @@ import rezkyaulia.android.dont_do.databinding.ListItemTaskBinding;
 
 public class ActivityRvAdapter  extends RecyclerView.ViewHolder {
 
-    private ListItemTaskBinding binding;
+    public ListItemTaskBinding binding;
     private Context mContext;
     DateModel date;
+
+
+    private int lastPosition = -1;
+    private int animationCount = 0;
+
 
     public ActivityRvAdapter(View itemView) {
         super(itemView);
@@ -45,7 +52,7 @@ public class ActivityRvAdapter  extends RecyclerView.ViewHolder {
         mContext = itemView.getContext();
     }
 
-    public void bind(final String key, Habit item){
+    public void bind(final String key, Habit item,int position){
         binding.text01.setText(item.getName());
 
         Query query = FirebaseDatabase.getInstance().getReference().child(Constant.getInstance().DETAILS).child(key).orderByPriority().limitToFirst(1);
@@ -67,79 +74,48 @@ public class ActivityRvAdapter  extends RecyclerView.ViewHolder {
             }
         });
 
-        binding.cardview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            customDialog(key);
-            }
-        });
+        setAnimation(binding.getRoot(), position);
+
     }
 
-    private void customDialog(final String key){
-        final DialogUpdateActivityBinding dialogBinding;
-        final Dialog dialog = new Dialog(mContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
-
-        final Calendar c = Calendar.getInstance();
-
-        dialogBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_update_activity, null, false);
-        dialog.setContentView(dialogBinding.getRoot());
-
-        dialogBinding.edit01.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(mContext,
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-
-                                c.set(year,monthOfYear,dayOfMonth,0,0,0);
-                                DateModel date = Util.getInstance().dateUtil().getDate(c);
-                                dialogBinding.edit01.setText(Util.getInstance().dateUtil().getDateFromFirebase(date));
-
-                            }
-                        }, year, month, day);
-                Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(date.getTimestamp());
-//                cal.add(Calendar.DAY_OF_MONTH,-1);
-                datePickerDialog.getDatePicker().setMinDate(cal.getTimeInMillis());
-                datePickerDialog.show();
-
-            }
-        });
-
-        dialogBinding.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DetailHabit detailHabit = new DetailHabit(Util.getInstance().dateUtil().getDate(c));
-                DatabaseReference save  = Constant.getInstance().SecondaryPref.child(key).push();
-                save.setValue(detailHabit);
-                String saveKey = save.getKey();
-
-                Constant.getInstance().SecondaryPref.child(key).child(saveKey).setPriority(-(detailHabit.date.getTimestamp()));
-                Constant.getInstance().PrimaryRef.child(PreferencesManager.getInstance().getUserKey()).child(key).setPriority(-(detailHabit.date.getTimestamp()));
-                if (!saveKey.isEmpty()){
-                    dialog.hide();
+    /**
+     * Here is the key method to apply the animation
+     */
+    private void setAnimation(final View viewToAnimate, int position) {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition) {
+            final Animation animation = AnimationUtils.loadAnimation(
+                    viewToAnimate.getContext(), android.R.anim.slide_in_left);
+            animationCount++;
+            animation.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
                 }
 
-            }
-        });
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    animationCount--;
+                }
 
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                @Override
+                public void onAnimationRepeat(Animation animation) {
 
+                }
+            });
+            animation.setDuration(300);
+            viewToAnimate.setVisibility(View.GONE);
+            viewToAnimate.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    viewToAnimate.setVisibility(View.VISIBLE);
+                    viewToAnimate.startAnimation(animation);
+
+                }
+            }, animationCount * 100);
+            lastPosition = position;
+        }
     }
+
 
 
 

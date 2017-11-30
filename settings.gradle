@@ -1,1 +1,1 @@
-include ':app', ':stylishwidget', ':materialview'
+include ':app'

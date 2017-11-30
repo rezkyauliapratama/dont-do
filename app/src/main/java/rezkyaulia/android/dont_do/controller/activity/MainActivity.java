@@ -3,17 +3,25 @@ package rezkyaulia.android.dont_do.controller.activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.database.sqlite.SQLiteBlobTooBigException;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
 import java.util.Calendar;
@@ -24,7 +32,6 @@ import rezkyaulia.android.dont_do.Model.Firebase.Habit;
 import rezkyaulia.android.dont_do.Model.Firebase.DateModel;
 import rezkyaulia.android.dont_do.Model.Firebase.DetailHabit;
 import rezkyaulia.android.dont_do.PreferencesManager;
-import rezkyaulia.android.dont_do.ProgressBarInflate;
 import rezkyaulia.android.dont_do.R;
 import rezkyaulia.android.dont_do.Utility.Util;
 import rezkyaulia.android.dont_do.databinding.ActivityMainBinding;
@@ -34,7 +41,6 @@ import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements BaseActivity.onListener{
 
-    private ProgressBarInflate mProgressBarInflate;
 
     ActivityMainBinding binding;
 
@@ -49,7 +55,6 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.rvLayout.swipeRefreshLayout.setEnabled(false);
 
-        mProgressBarInflate = new ProgressBarInflate(this,binding.activityMain);
 
         mContext = this;
 
@@ -77,8 +82,8 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
 
     private void init(){
         if (token.isEmpty()){
-            mProgressBarInflate.setVisibility(View.VISIBLE);
-            mProgressBarInflate.setTitle("initialize");
+
+
         }
     }
 
@@ -87,9 +92,7 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
         runOnUiThread(new Runnable() {
             public void run()
             {
-                if (mProgressBarInflate.getVisibility() == View.VISIBLE){
-                    mProgressBarInflate.setVisibility(View.GONE);
-                }
+
             }
         });
     }
@@ -101,17 +104,42 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
                 (Habit.class, R.layout.list_item_task, ActivityRvAdapter.class,
                         activityRef.orderByPriority()) {
 
+
             @Override
             protected void populateViewHolder(ActivityRvAdapter viewHolder, Habit model, int position) {
                 String key = this.getRef(position).getKey();
                 Timber.e("key : "+key+" | model : "+new Gson().toJson(model));
-                viewHolder.bind(key,model);
+                viewHolder.bind(key,model,position);
             }
-        };
+
+
+
+           @Override
+           public void onViewDetachedFromWindow(ActivityRvAdapter holder) {
+               super.onViewDetachedFromWindow(holder);
+               holder.binding.getRoot().setVisibility(View.VISIBLE);
+               holder.binding.getRoot().clearAnimation();
+           }
+
+
+       };
 
 //        binding.rvLayout.recyclerView.setHasFixedSize(true);
         binding.rvLayout.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         binding.rvLayout.recyclerView.setAdapter(mFirebaseAdapter);
+
+
+        activityRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Timber.e("onDataChanged : "+dataSnapshot.toString());
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
     private void customDialog(){

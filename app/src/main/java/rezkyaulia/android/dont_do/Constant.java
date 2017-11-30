@@ -37,9 +37,12 @@ public class Constant {
         return INSTANCE;
     }
 
+    public final String DB_NAME = "db_dontdo";
     public final String NAME_PREF = "app";
     public final String TOKEN_PREF = "token";
     public final String USER_KEY_PREF = "user_key";
+    public final String FONT_SIZE_PREF = "FONT_SIZE_KEY";
+
     public final String EMAIL = "email";
     public final String UID = "uid";
 
