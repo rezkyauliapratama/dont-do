@@ -12,40 +12,12 @@ import rezkyaulia.android.dont_do.Utility.Util;
  */
 
 public class Habit {
-    @Exclude
-    public String activityKey;
-    @Exclude
+    private String name;
     private DateModel dateModel;
-
-    public String name;
-    public boolean active;
-    public long createDate;
-
 
 
     public Habit(){
     }
-
-    public Habit(String name) {
-        this.dateModel = Util.getInstance().dateUtil().getDate();
-        this.name = name;
-        this.active = true;
-        this.createDate = dateModel.getTimestamp();
-    }
-
-    public Habit(String activityKey, String name) {
-        this.dateModel = Util.getInstance().dateUtil().getDate();
-        this.activityKey = activityKey;
-        this.name = name;
-        this.active = true;
-        this.createDate = dateModel.getTimestamp();
-    }
-
-    public Habit(String name, boolean active) {
-        this.name = name;
-        this.active = active;
-    }
-
 
 
     public String getName() {
@@ -56,20 +28,12 @@ public class Habit {
         this.name = name;
     }
 
-    public boolean isActive() {
-        return active;
+    public DateModel getDateModel() {
+        return dateModel;
     }
 
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public long getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(long createDate) {
-        this.createDate = createDate;
+    public void setDateModel(DateModel dateModel) {
+        this.dateModel = dateModel;
     }
 }
 

@@ -1,9 +1,12 @@
 package rezkyaulia.android.dont_do.database;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import rezkyaulia.android.dont_do.database.entity.ActivityTbl;
 import rezkyaulia.android.dont_do.database.entity.ActivityTblDao;
+import timber.log.Timber;
 
 /**
  * Created by Rezky Aulia Pratama on 12/1/2017.
@@ -22,6 +25,7 @@ public class ManageActivityTbl {
     }
 
     public long add(ActivityTbl object) {
+        Timber.e("add activity tbl : "+new Gson().toJson(object));
         return dao.insertOrReplace(object);
     }
 
@@ -30,7 +34,7 @@ public class ManageActivityTbl {
     }
 
     public List<ActivityTbl> getAll() {
-        return dao.queryBuilder().list();
+        return dao.queryBuilder().orderDesc(ActivityTblDao.Properties.CreatedDate).list();
     }
 
 

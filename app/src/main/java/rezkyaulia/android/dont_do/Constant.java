@@ -48,9 +48,9 @@ public class Constant {
 
 
 //    firebase child name
-    public final String USERS = "users";
-    public final String ACTIVITIES = "activities";
-    public final String DETAILS = "detail_activities";
+    public final String USERS = "Users";
+    public final String ACTIVITIES = "Activities";
+    public final String DETAILS = "DetailActivities";
 
 //    Firebase reference
     private DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();

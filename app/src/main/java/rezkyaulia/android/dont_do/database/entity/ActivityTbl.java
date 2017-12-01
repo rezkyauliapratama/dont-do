@@ -11,6 +11,8 @@ import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
 
+import rezkyaulia.android.dont_do.Utility.Util;
+
 /**
  * Created by Rezky Aulia Pratama on 12/1/2017.
  */
@@ -28,17 +30,17 @@ public class ActivityTbl implements Parcelable{
     private String UserId;
 
     @Property(nameInDb = "Active")
-    private String Active;
+    private boolean Active;
 
     @Property(nameInDb = "Name")
     private String Name;
 
     @Property(nameInDb = "CreatedDate")
-    private String CreatedDate;
+    private long CreatedDate;
 
-    @Generated(hash = 35667501)
-    public ActivityTbl(String ActivityId, String UserId, String Active, String Name,
-            String CreatedDate) {
+    @Generated(hash = 1210575340)
+    public ActivityTbl(String ActivityId, String UserId, boolean Active, String Name,
+            long CreatedDate) {
         this.ActivityId = ActivityId;
         this.UserId = UserId;
         this.Active = Active;
@@ -66,11 +68,11 @@ public class ActivityTbl implements Parcelable{
         this.UserId = UserId;
     }
 
-    public String getActive() {
+    public boolean getActive() {
         return this.Active;
     }
 
-    public void setActive(String Active) {
+    public void setActive(boolean Active) {
         this.Active = Active;
     }
 
@@ -82,11 +84,11 @@ public class ActivityTbl implements Parcelable{
         this.Name = Name;
     }
 
-    public String getCreatedDate() {
+    public long getCreatedDate() {
         return this.CreatedDate;
     }
 
-    public void setCreatedDate(String CreatedDate) {
+    public void setCreatedDate(long CreatedDate) {
         this.CreatedDate = CreatedDate;
     }
 
@@ -100,17 +102,17 @@ public class ActivityTbl implements Parcelable{
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.ActivityId);
         dest.writeString(this.UserId);
-        dest.writeString(this.Active);
+        dest.writeByte(this.Active ? (byte) 1 : (byte) 0);
         dest.writeString(this.Name);
-        dest.writeString(this.CreatedDate);
+        dest.writeLong(this.CreatedDate);
     }
 
     protected ActivityTbl(Parcel in) {
         this.ActivityId = in.readString();
         this.UserId = in.readString();
-        this.Active = in.readString();
+        this.Active = in.readByte() != 0;
         this.Name = in.readString();
-        this.CreatedDate = in.readString();
+        this.CreatedDate = in.readLong();
     }
 
     public static final Creator<ActivityTbl> CREATOR = new Creator<ActivityTbl>() {

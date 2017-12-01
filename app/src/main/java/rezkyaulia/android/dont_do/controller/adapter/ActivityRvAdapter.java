@@ -55,7 +55,7 @@ public class ActivityRvAdapter  extends RecyclerView.ViewHolder {
     public void bind(final String key, Habit item,int position){
         binding.text01.setText(item.getName());
 
-        Query query = FirebaseDatabase.getInstance().getReference().child(Constant.getInstance().DETAILS).child(key).orderByPriority().limitToFirst(1);
+        /*Query query = FirebaseDatabase.getInstance().getReference().child(Constant.getInstance().DETAILS).child(key).orderByPriority().limitToFirst(1);
         FirebaseEvent event = new FirebaseEvent(query);
         event.addChildEventListener(new FirebaseEvent.onChildEventListener() {
             @Override
@@ -73,7 +73,7 @@ public class ActivityRvAdapter  extends RecyclerView.ViewHolder {
 
             }
         });
-
+*/
         setAnimation(binding.getRoot(), position);
 
     }

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ActionMenuView;
 import android.widget.DatePicker;
 import android.widget.LinearLayout;
 
@@ -24,7 +25,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 import rezkyaulia.android.dont_do.controller.adapter.ActivityRvAdapter;
 import rezkyaulia.android.dont_do.Constant;
@@ -34,6 +39,10 @@ import rezkyaulia.android.dont_do.Model.Firebase.DetailHabit;
 import rezkyaulia.android.dont_do.PreferencesManager;
 import rezkyaulia.android.dont_do.R;
 import rezkyaulia.android.dont_do.Utility.Util;
+import rezkyaulia.android.dont_do.controller.adapter.TaskRecyclerViewAdapter;
+import rezkyaulia.android.dont_do.database.Facade;
+import rezkyaulia.android.dont_do.database.entity.ActivityTbl;
+import rezkyaulia.android.dont_do.database.entity.DetailActivityTbl;
 import rezkyaulia.android.dont_do.databinding.ActivityMainBinding;
 import rezkyaulia.android.dont_do.databinding.DialogAddActivityBinding;
 import rezkyaulia.android.dont_do.databinding.DialogUpdateActivityBinding;
@@ -44,9 +53,11 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
 
     ActivityMainBinding binding;
 
-    private FirebaseRecyclerAdapter mFirebaseAdapter;
+//    private FirebaseRecyclerAdapter mFirebaseAdapter;
 
     Context mContext;
+
+    TaskRecyclerViewAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +71,8 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
 
         init();
 
-        setAdapterRv();
+        initAdapterRV();
+//        setAdapterRv();
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +89,6 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
     @Override
     public void onDestroy(){
         super.onDestroy();
-        mFirebaseAdapter.cleanup();
     }
 
     private void init(){
@@ -97,9 +108,44 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
         });
     }
 
+    private void initAdapterRV(){
+        List<ActivityTbl> activityTbls = Facade.getInstance().getManageActivityTbl().getAll();
+        List<Habit> habits = new ArrayList<>();
+
+        if (activityTbls != null){
+            for(ActivityTbl item : activityTbls){
+                Habit habit = new Habit();
+
+                DetailActivityTbl detailActivityTbl = Facade.getInstance().getManageDetailActivityTbl().get(item.getActivityId());
+
+                /*Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(detailActivityTbl.getTimestamp());*/
+                DateModel dateModel = Util.getInstance().dateUtil().getDate(detailActivityTbl.getTimestamp());
+
+                habit.setName(item.getName());
+                habit.setDateModel(dateModel);
+
+                habits.add(habit);
+
+            }
+
+            Collections.sort(habits, new Comparator<Habit>() {
+                @Override
+                public int compare(Habit lhs, Habit rhs) {
+                    return Long.compare(rhs.getDateModel().getTimestamp(),lhs.getDateModel().getTimestamp());
+                }
+            });
+        }
+
+        mAdapter = new TaskRecyclerViewAdapter(this,habits);
+        binding.rvLayout.recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvLayout.recyclerView.setAdapter(mAdapter);
+    }
+
+
    private void setAdapterRv (){
        Timber.e("User Key : ".concat(userKey));
-       DatabaseReference activityRef = mDatabase.child(Constant.getInstance().ACTIVITIES).child(userKey);
+       /*DatabaseReference activityRef = mDatabase.child(Constant.getInstance().ACTIVITIES).child(userKey);
        mFirebaseAdapter = new FirebaseRecyclerAdapter<Habit, ActivityRvAdapter>
                 (Habit.class, R.layout.list_item_task, ActivityRvAdapter.class,
                         activityRef.orderByPriority()) {
@@ -123,11 +169,13 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
 
 
        };
-
+*/
 //        binding.rvLayout.recyclerView.setHasFixedSize(true);
+       /*List<ActivityTbl> activityTbls = Facade.getInstance().getManageActivityTbl().getAll();
         binding.rvLayout.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.rvLayout.recyclerView.setAdapter(mFirebaseAdapter);
+        binding.rvLayout.recyclerView.setAdapter(new TaskRecyclerViewAdapter(this,activityTbls));*/
 
+/*
 
         activityRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -140,6 +188,7 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
 
             }
         });
+*/
 
     }
     private void customDialog(){
@@ -172,7 +221,7 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
                             public void onDateSet(DatePicker view, int year,
                                                   int monthOfYear, int dayOfMonth) {
 
-                                c.set(year,monthOfYear,dayOfMonth,0,0);
+                                c.set(year,monthOfYear,dayOfMonth/*,0,0*/);
                                 dateModel[0] = Util.getInstance().dateUtil().getDate(c);
                                 dialogBinding.edit02.setText(Util.getInstance().dateUtil().getDateFromFirebase(dateModel[0]));
 
@@ -188,23 +237,52 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
             @Override
             public void onClick(View v) {
                 String text = dialogBinding.edit01.getText().toString();
-
+                Timber.e("ON CLICK");
                 if (!text.isEmpty()) {
-                    Habit habit = new Habit(text);
+                    ActivityTbl activityTbl = new ActivityTbl();
+                    activityTbl.setName(text);
+                    activityTbl.setActive(true);
+                    activityTbl.setCreatedDate(dateModel[0].getTimestamp());
 
                     DatabaseReference activityRef = constant.PrimaryRef.child(userKey).push();
-                    activityRef.setValue(habit);
+                    activityRef.setValue(activityTbl);
                     String key = activityRef.getKey();
 
-                    Constant.getInstance().PrimaryRef.child(userKey).child(key).setPriority(-(dateModel[0].getTimestamp()));
-
                     if (!key.isEmpty()){
-                        DetailHabit detailHabit = new DetailHabit(dateModel[0]);
+                        activityTbl.setUserId(userKey);
+                        activityTbl.setActivityId(key);
+                        long id = Facade.getInstance().getManageActivityTbl().add(activityTbl);
+
+                        Timber.e("id add activity : "+id);
+                        DetailActivityTbl detailActivityTbl = new DetailActivityTbl();
+                        detailActivityTbl.setDay(dateModel[0].getDay());
+                        detailActivityTbl.setMonth(dateModel[0].getMonth());
+                        detailActivityTbl.setTimestamp(dateModel[0].getTimestamp());
+                        detailActivityTbl.setYear(dateModel[0].getYear());
+
                         DatabaseReference detailPref = Constant.getInstance().SecondaryPref.child(key).push();
-                        detailPref.setValue(detailHabit);
+                        detailPref.setValue(detailActivityTbl);
                         String keyDetail = detailPref.getKey();
-                        constant.SecondaryPref.child(key).child(keyDetail).setPriority(-(detailHabit.date.getTimestamp()));
+
+                        if (!keyDetail.isEmpty()){
+                            detailActivityTbl.setActivityId(key);
+                            detailActivityTbl.setDetailActivityId(keyDetail);
+                            Facade.getInstance().getManageDetailActivityTbl().add(detailActivityTbl);
+
+                            Habit habit = new Habit();
+                            habit.setName(activityTbl.getName());
+                            habit.setDateModel(Util.getInstance().dateUtil().getDate(detailActivityTbl.getTimestamp()));
+                            addHabit(habit);
+
+                        }
+//                        constant.SecondaryPref.child(key).child(keyDetail).setPriority(-(detailHabit.date.getTimestamp()));
                     }
+
+//                    Constant.getInstance().PrimaryRef.child(userKey).child(key).setPriority(-(dateModel[0].getTimestamp()));
+/*
+                    if (!key.isEmpty()){
+
+                    }*/
                     dialog.hide();
                 }
             }
@@ -216,7 +294,24 @@ public class MainActivity extends BaseActivity implements BaseActivity.onListene
 
     }
 
+    private void addHabit(Habit habit){
 
+        final List<Habit> tempHabits = new ArrayList<>();
+        tempHabits.addAll(mAdapter.getItems());
+
+        tempHabits.add(habit);
+
+        Collections.sort(tempHabits, new Comparator<Habit>() {
+            @Override
+            public int compare(Habit lhs, Habit rhs) {
+                return Long.compare(rhs.getDateModel().getTimestamp(),lhs.getDateModel().getTimestamp());
+            }
+        });
+
+        Timber.e("animateTo");
+        mAdapter.animateTo(tempHabits);
+
+    }
 
     private void customDialog(final String key){
         final DialogUpdateActivityBinding dialogBinding;

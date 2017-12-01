@@ -1,9 +1,12 @@
 package rezkyaulia.android.dont_do.database;
 
+import com.google.gson.Gson;
+
 import java.util.List;
 
 import rezkyaulia.android.dont_do.database.entity.UserTbl;
 import rezkyaulia.android.dont_do.database.entity.UserTblDao;
+import timber.log.Timber;
 
 /**
  * Created by Rezky Aulia Pratama on 12/1/2017.
@@ -22,6 +25,7 @@ public class ManageUserTbl {
     }
 
     public long add(UserTbl object) {
+        Timber.e("ADD USER : "+new Gson().toJson(object));
         return dao.insertOrReplace(object);
     }
 

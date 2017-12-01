@@ -2,14 +2,17 @@ package rezkyaulia.android.dont_do;
 
 import android.app.Application;
 import android.content.Context;
+import android.util.Log;
 import android.view.ViewConfiguration;
 
 import com.app.infideap.stylishwidget.view.Stylish;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.database.FirebaseDatabase;
+import com.squareup.leakcanary.LeakCanary;
 import com.squareup.leakcanary.RefWatcher;
 
 import org.greenrobot.greendao.database.Database;
+import org.greenrobot.greendao.query.QueryBuilder;
 
 import java.lang.reflect.Field;
 
@@ -56,11 +59,11 @@ public class BaseApplication extends Application
 
     private void init(){
         FirebaseApp.initializeApp(this);
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+//        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         PreferencesManager.init(this);
         Util.init(this);
-        eventBus.instanceOf();
+
         initTimber();
 
         String fontFolder = "fonts/Exo_2/Exo2-";
@@ -81,6 +84,15 @@ public class BaseApplication extends Application
         DaoSession daoSession = new DaoMaster(db).newSession();
         Facade.init(daoSession);
 
+
+        if (BuildConfig.DEBUG){
+            Log.e("BaseApplication","is debug : "+BuildConfig.DEBUG);
+            Timber.plant(new Timber.DebugTree());
+            QueryBuilder.LOG_SQL = BuildConfig.DEBUG;
+            QueryBuilder.LOG_VALUES = BuildConfig.DEBUG;
+            refWatcher = LeakCanary.install(this);
+
+        }
       /*  if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not init your app in this process.

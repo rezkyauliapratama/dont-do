@@ -11,6 +11,8 @@ import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
 
+import rezkyaulia.android.dont_do.Model.Firebase.User;
+
 /**
  * Created by Rezky Aulia Pratama on 12/1/2017.
  */
@@ -33,6 +35,7 @@ public class UserTbl implements Parcelable{
 
     @Property(nameInDb = "Username")
     private String Username;
+
 
     @Generated(hash = 375584856)
     public UserTbl(String UserId, String Email, String Password, String Token,

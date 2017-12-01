@@ -16,4 +16,6 @@
     <dimen name="margin_large">12dp</dimen>
     <dimen name="margin_xlarge">16dp</dimen>
 
+    <dimen name="size_image_36dp">36dp</dimen>
+
 </resources>

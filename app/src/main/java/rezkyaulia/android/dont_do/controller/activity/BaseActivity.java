@@ -16,8 +16,10 @@ import rezkyaulia.android.dont_do.Constant;
 import rezkyaulia.android.dont_do.Model.Firebase.User;
 import rezkyaulia.android.dont_do.PreferencesManager;
 import rezkyaulia.android.dont_do.R;
+import rezkyaulia.android.dont_do.Utility.RxBus;
 import rezkyaulia.android.dont_do.Utility.Util;
-import rezkyaulia.android.dont_do.eventBus;
+import rezkyaulia.android.dont_do.database.Facade;
+import rezkyaulia.android.dont_do.database.entity.UserTbl;
 import rx.Observer;
 import rx.Subscription;
 import timber.log.Timber;
@@ -64,40 +66,32 @@ public abstract class BaseActivity extends AppCompatActivity  {
     }
 
     private void getTokenObservable(){
-        mSubs = eventBus.instanceOf().getObservable().
-                subscribe(new Observer<String>() {
-                    @Override
-                    public void onCompleted() {
+       RxBus.getInstance().observable(String.class).subscribe(s -> {
+           Timber.e("subscribe token : "+s);
 
-                    }
+           boolean isSave = pref.saveToken(s);
 
-                    @Override
-                    public void onError(Throwable e) {
+           if (isSave){
+               UserTbl usr = new UserTbl();
+               usr.setToken(s);
+               DatabaseReference newRef = mDatabase.child(Constant.getInstance().USERS).push();
+               newRef.setValue(usr);
 
-                    }
+               token = s;
+               userKey = newRef.getKey();
 
-                    @Override
-                    public void onNext(String s) {
-                        Timber.e("subscribe token : "+s);
+               boolean b = pref.saveUserKey(userKey);
 
-                        boolean isSave = pref.saveToken(s);
+               if (!userKey.isEmpty()){
+                   usr.setUserId(userKey);
+                   Facade.getInstance().getManagerUserTbl().add(usr);
+               }
+               mListener.onRefreshToken(s);
 
-                        if (isSave){
-                            User usr = new User(s);
-                            DatabaseReference newRef = mDatabase.child(Constant.getInstance().USERS).push();
-                            newRef.setValue(usr);
+           }
+       });
 
-                            token = s;
-                            userKey = newRef.getKey();
 
-                            boolean b = pref.saveUserKey(userKey);
-
-                            mListener.onRefreshToken(s);
-
-                        }
-
-                    }
-                });
     }
     @Override
     public void onPause() {
@@ -108,7 +102,6 @@ public abstract class BaseActivity extends AppCompatActivity  {
     @Override
     public void onDestroy(){
         super.onDestroy();
-        mSubs.unsubscribe();
 
     }
 

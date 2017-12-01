@@ -24,16 +24,25 @@ public class DateUtil {
     public DateModel getDate() {
         Calendar calendar = Calendar.getInstance();
 //        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR_OF_DAY,0);
+        /*calendar.set(Calendar.HOUR_OF_DAY,0);
         calendar.set(Calendar.MINUTE,0);
-        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.SECOND,0);*/
 
         return formatFirebaseDate(calendar);
+
     }
 
     public DateModel getDate(Calendar cal){
         return formatFirebaseDate(cal);
     }
+
+    public DateModel getDate(long timeMilis){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(timeMilis);
+
+        return formatFirebaseDate(calendar);
+    }
+
     private DateModel formatFirebaseDate(Calendar cal) {
 
         int day = cal.get(Calendar.DAY_OF_MONTH);
@@ -46,6 +55,11 @@ public class DateUtil {
     }
 
     public String getUserFriendlyDate(Date date){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MMM, dd", Locale.UK);
+        return simpleDateFormat.format(date);
+    }
+
+    public String getUserFriendlyDateTime(Date date){
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MMM,dd HH:mm", Locale.UK);
         return simpleDateFormat.format(date);
     }
@@ -99,7 +113,7 @@ public class DateUtil {
                 ret = elapsedDays+" days";
             }
         }else{
-            if (elapsedHours>0){
+            if (elapsedHours>1){
                 ret = "Today";
 
             }else{
