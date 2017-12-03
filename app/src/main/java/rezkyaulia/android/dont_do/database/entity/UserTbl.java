@@ -19,6 +19,11 @@ import rezkyaulia.android.dont_do.Model.Firebase.User;
 @Entity(nameInDb = "UserTbl",indexes = {@Index(value = "UserId", unique = true)})
 public class UserTbl implements Parcelable{
 
+    public static final String colUserId = "userid";
+    public static final String colEmail= "email";
+    public static final String colPassword = "password";
+    public static final String colToken = "token";
+
     @Id
     @Property(nameInDb = "UserId")
     @Exclude

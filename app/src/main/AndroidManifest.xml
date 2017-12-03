@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
     <application
@@ -12,20 +13,21 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".controller.activity.MainActivity">
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name=".controller.activity.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".controller.activity.DetailTaskActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateVisible|adjustResize|stateAlwaysHidden" />
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:windowSoftInputMode="stateVisible|adjustResize|stateAlwaysHidden"
+            android:launchMode="singleTask"/>
 
         <!-- [START firebase_service] -->
         <service
@@ -43,6 +45,7 @@
             </intent-filter>
         </service>
         <!-- [END firebase_iid_service] -->
+<!--
 
         <service
             android:name=".controller.service.ReminderIntentService"
@@ -58,6 +61,7 @@
             </intent-filter>
         </receiver>
 
+-->
 
     </application>
 

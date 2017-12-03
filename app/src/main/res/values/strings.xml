@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Dont-do</string>
     <string name="empty">....</string>
+    <string name="title">Title</string>
+    <string name="details">Details</string>
+    <string name="navigation_drawer_open">drawer open</string>
+    <string name="navigation_drawer_close">drawer closed</string>
+    <string name="sign_out">Sign out</string>
 </resources>

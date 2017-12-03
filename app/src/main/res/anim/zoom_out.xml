@@ -4,13 +4,13 @@
     android:interpolator="@android:anim/linear_interpolator">
 
     <alpha
-        android:duration="900"
+        android:duration="850"
         android:fromAlpha="1.0"
         android:interpolator="@android:anim/accelerate_interpolator"
         android:toAlpha="0.0" />
 
     <scale
-        android:duration="400"
+        android:duration="300"
         android:fromXScale="1.0"
         android:fromYScale="1.0"
         android:pivotX="50%"

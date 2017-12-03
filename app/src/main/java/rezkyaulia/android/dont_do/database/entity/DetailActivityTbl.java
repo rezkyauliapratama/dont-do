@@ -10,6 +10,7 @@ import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Transient;
 
 /**
  * Created by Rezky Aulia Pratama on 12/1/2017.
@@ -26,20 +27,22 @@ public class DetailActivityTbl implements Parcelable {
     private String ActivityId;
 
     @Property(nameInDb = "Day")
-    private long Day;
+    private int Day;
 
     @Property(nameInDb = "Month")
-    private long Month;
+    private int Month;
 
     @Property(nameInDb = "Timestamp")
-    private long Timestamp;
+    private Long Timestamp;
 
     @Property(nameInDb = "Year")
-    private long Year;
+    private int Year;
 
-    @Generated(hash = 1628794098)
-    public DetailActivityTbl(String DetailActivityId, String ActivityId, long Day, long Month,
-            long Timestamp, long Year) {
+
+
+    @Generated(hash = 1671446290)
+    public DetailActivityTbl(String DetailActivityId, String ActivityId, int Day, int Month,
+            Long Timestamp, int Year) {
         this.DetailActivityId = DetailActivityId;
         this.ActivityId = ActivityId;
         this.Day = Day;
@@ -68,35 +71,35 @@ public class DetailActivityTbl implements Parcelable {
         this.ActivityId = ActivityId;
     }
 
-    public long getDay() {
+    public int getDay() {
         return this.Day;
     }
 
-    public void setDay(long Day) {
+    public void setDay(int Day) {
         this.Day = Day;
     }
 
-    public long getMonth() {
+    public int getMonth() {
         return this.Month;
     }
 
-    public void setMonth(long Month) {
+    public void setMonth(int Month) {
         this.Month = Month;
     }
 
-    public long getTimestamp() {
+    public Long getTimestamp() {
         return this.Timestamp;
     }
 
-    public void setTimestamp(long Timestamp) {
+    public void setTimestamp(Long Timestamp) {
         this.Timestamp = Timestamp;
     }
 
-    public long getYear() {
+    public int getYear() {
         return this.Year;
     }
 
-    public void setYear(long Year) {
+    public void setYear(int Year) {
         this.Year = Year;
     }
 
@@ -110,19 +113,19 @@ public class DetailActivityTbl implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(this.DetailActivityId);
         dest.writeString(this.ActivityId);
-        dest.writeLong(this.Day);
-        dest.writeLong(this.Month);
-        dest.writeLong(this.Timestamp);
-        dest.writeLong(this.Year);
+        dest.writeInt(this.Day);
+        dest.writeInt(this.Month);
+        dest.writeValue(this.Timestamp);
+        dest.writeInt(this.Year);
     }
 
     protected DetailActivityTbl(Parcel in) {
         this.DetailActivityId = in.readString();
         this.ActivityId = in.readString();
-        this.Day = in.readLong();
-        this.Month = in.readLong();
-        this.Timestamp = in.readLong();
-        this.Year = in.readLong();
+        this.Day = in.readInt();
+        this.Month = in.readInt();
+        this.Timestamp = (Long) in.readValue(Long.class.getClassLoader());
+        this.Year = in.readInt();
     }
 
     public static final Creator<DetailActivityTbl> CREATOR = new Creator<DetailActivityTbl>() {

@@ -4,10 +4,12 @@
     <color name="colorPrimaryDark">#455A64</color>
     <color name="colorPriLmarylight">#CFD8DC</color>
     <color name="colorAccent">#009688</color>
+    <color name="colorPrimaryTransparent">#9b009688</color>
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
     <color name="colorIcons">#FFFFFF</color>
     <color name="ColorDivider">#BDBDBD</color>
 
+    <color name="bg_overlay">#90ffffff</color>
 
 </resources>

@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "302531211253",
-    "firebase_url": "https://dont-do-eda84.firebaseio.com",
-    "project_id": "dont-do-eda84",
-    "storage_bucket": "dont-do-eda84.appspot.com"
+    "project_number": "835334935417",
+    "firebase_url": "https://dontdo-a1b3c.firebaseio.com",
+    "project_id": "dontdo-a1b3c",
+    "storage_bucket": "dontdo-a1b3c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:302531211253:android:ebf378520fc91442",
+        "mobilesdk_app_id": "1:835334935417:android:72592d17b8b234fd",
         "android_client_info": {
-          "package_name": "rezkyaulia.android.dont_do"
+          "package_name": "rezkyauliapratama.android.dont_do"
         }
       },
       "oauth_client": [
         {
-          "client_id": "302531211253-jroslo1b7c2149uqkeq6topbbda6o7ib.apps.googleusercontent.com",
+          "client_id": "835334935417-ji77fs04q2du4kohbpnmr8uha0uipmhs.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "rezkyaulia.android.dont_do",
-            "certificate_hash": "B9721F15668D04DC4B741EE50DAB05F19C186CEF"
+            "package_name": "rezkyauliapratama.android.dont_do",
+            "certificate_hash": "dc7d8c3ca53d32b0143eba877988c14a6dcb851d"
           }
         },
         {
-          "client_id": "302531211253-07i6eqb4j0ijgap107v8svoubmuithsr.apps.googleusercontent.com",
+          "client_id": "835334935417-6bs7cpon14vg7g3eg95nqh5u33n67hsm.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBppRrJQQkOxu8w7nQx74ZINDGte-M1fuI"
+          "current_key": "AIzaSyCblZzvbMK9hClVs0MihTFGwJRMgbf2_qU"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "302531211253-07i6eqb4j0ijgap107v8svoubmuithsr.apps.googleusercontent.com",
+              "client_id": "835334935417-6bs7cpon14vg7g3eg95nqh5u33n67hsm.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

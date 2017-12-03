@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.gms.common.SignInButton
+            android:id="@+id/sign_in_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/margin_normal"/>
+
+        <com.app.infideap.stylishwidget.view.ATextView
+            android:id="@+id/button_signOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Button.Info.Fill"
+            android:text="@string/sign_out"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/margin_normal"/>
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>
+</layout>

@@ -9,24 +9,48 @@
         android:layout_height="match_parent"
         tools:context="rezkyaulia.android.dont_do.controller.activity.MainActivity">
 
-        <ScrollView
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:padding="@dimen/margin_small"
-            >
+            android:layout_height="wrap_content"
+            app:elevation="4dp"
+            android:theme="@style/AppTheme.AppBarOverlay">
 
-            <LinearLayout
+            <rezkyaulia.android.dont_do.view.AToolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorWhite"
+                app:popupTheme="@style/AppTheme.AppBarOverlay">
 
-               <include layout="@layout/content_card_detail_task"/>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    >
 
+                    <ImageView
+                        android:id="@+id/imageView_backArrow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_arrow_back_black_24dp"/>
 
-            </LinearLayout>
+                    <com.app.infideap.stylishwidget.view.ATextView
+                        android:id="@+id/actionbar_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:text="@string/title"
+                        android:textColor="@color/colorBlack_1000"
+                        android:textAppearance="@style/TextStyle.Large"/>
+                </RelativeLayout>
 
-        </ScrollView>
+            </rezkyaulia.android.dont_do.view.AToolbar>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <include layout="@layout/content_detail_task" android:id="@+id/container"/>
+
 
     </android.support.design.widget.CoordinatorLayout>
 

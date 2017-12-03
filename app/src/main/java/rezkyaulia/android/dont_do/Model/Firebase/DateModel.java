@@ -1,15 +1,28 @@
 package rezkyaulia.android.dont_do.Model.Firebase;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.firebase.database.Exclude;
+
 /**
  * Created by Mutya Nayavashti on 13/03/2017.
  */
 
-public class DateModel {
+public class DateModel implements Parcelable {
 
     public int day;
     public int month;
     public int year;
     public long timestamp;
+
+    @Exclude
+    public long runningDay;
+
+    @Exclude
+    public boolean showLine;
+
+
 
     public DateModel() {
     }
@@ -53,4 +66,57 @@ public class DateModel {
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
     }
+
+    public long getRunningDay() {
+        return runningDay;
+    }
+
+    public void setRunningDay(long runningDay) {
+        this.runningDay = runningDay;
+    }
+
+    public boolean isShowLine() {
+        return showLine;
+    }
+
+    public void setShowLine(boolean showLine) {
+        this.showLine = showLine;
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(this.day);
+        dest.writeInt(this.month);
+        dest.writeInt(this.year);
+        dest.writeLong(this.timestamp);
+        dest.writeLong(this.runningDay);
+        dest.writeByte(this.showLine ? (byte) 1 : (byte) 0);
+    }
+
+    protected DateModel(Parcel in) {
+        this.day = in.readInt();
+        this.month = in.readInt();
+        this.year = in.readInt();
+        this.timestamp = in.readLong();
+        this.runningDay = in.readLong();
+        this.showLine = in.readByte() != 0;
+    }
+
+    public static final Creator<DateModel> CREATOR = new Creator<DateModel>() {
+        @Override
+        public DateModel createFromParcel(Parcel source) {
+            return new DateModel(source);
+        }
+
+        @Override
+        public DateModel[] newArray(int size) {
+            return new DateModel[size];
+        }
+    };
 }

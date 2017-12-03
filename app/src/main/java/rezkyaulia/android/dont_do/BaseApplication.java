@@ -40,7 +40,7 @@ public class BaseApplication extends Application
         /*initialize*/
         init();
 
-        new ReminderEventReceiver().setupAlarm(getApplicationContext());
+    /*    new ReminderEventReceiver().setupAlarm(getApplicationContext());
 
 
         try {
@@ -54,7 +54,7 @@ public class BaseApplication extends Application
             // Ignore
         }
 
-
+*/
     }
 
     private void init(){
@@ -64,7 +64,7 @@ public class BaseApplication extends Application
         PreferencesManager.init(this);
         Util.init(this);
 
-        initTimber();
+//        initTimber();
 
         String fontFolder = "fonts/Exo_2/Exo2-";
         Stylish.getInstance().set(
