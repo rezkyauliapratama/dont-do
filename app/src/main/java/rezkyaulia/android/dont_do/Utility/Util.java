@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-import rezkyaulia.android.dont_do.Model.Firebase.User;
 import rezkyaulia.android.dont_do.R;
 import timber.log.Timber;
 
@@ -63,40 +62,12 @@ public class Util {
         return FirebaseInstanceId.getInstance().getToken();
     }
 
-    public static String saveUserFirebase(DatabaseReference mDatabase, String token){
-        User usr = new User();
-        //Adding values
-        usr.setUsername("");
-        usr.setToken(token);
-        usr.setEmail("");
-        usr.setPassword("");
-//                DatabaseReference newRef = mDatabase.child("users").push();
-//                mDatabase.child("users").child(token).setValue(usr);
-        String key = mDatabase.child("users").push().getKey();
-        mDatabase.child("users").push().setValue(usr);
-        return key;
-    }
-
     public float convertDpToPixel(float dp) {
         DisplayMetrics metrics = Resources.getSystem().getDisplayMetrics();
         float px = dp * (metrics.densityDpi / 160f);
         return round(px);
     }
 
-    public void setStatusBarColor(Activity context){
-        Window window = context.getWindow();
-
-// clear FLAG_TRANSLUCENT_STATUS flag:
-        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-
-// add FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS flag to the window
-        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-
-// finally change the color
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.setStatusBarColor(ContextCompat.getColor(context, R.color.colorPrimaryTransparent));
-        }
-    }
 
 
 
@@ -162,45 +133,6 @@ public class Util {
         long wpmMilis = round(minuteMilis/wpm);
 
         return wpmMilis;
-    }
-
-    public String getWords(int mIndex,int pointWord,int mNol, int mGs, List<String> mWords){
-        String tempWord = "";
-
-        if (pointWord == mIndex && mWords != null){
-            Timber.e("pointWord == mIndex");
-            for (int i = 0; i<mNol ; i++){
-                Timber.e("For mNol");
-                for (int j = 0; j<mGs; j++){
-                    Timber.e("for mGS");
-                    if (pointWord>=mWords.size()){
-                        pointWord = 0;
-                        Timber.e("Point Word : "+pointWord+" | break GS");
-                        break;
-                    }
-
-                    tempWord = tempWord+" ".concat(mWords.get(pointWord));
-                    Timber.e("tempWord GS:"+tempWord);
-
-                    pointWord++;
-
-
-                }
-                tempWord=tempWord+"\n";
-                Timber.e("tempWord NOL:"+tempWord);
-
-                Timber.e("pointwords : "+pointWord);
-                if (pointWord>=mWords.size()){
-                    pointWord = 0;
-                    Timber.e("Point Word : "+pointWord+" | break NOL");
-                    break;
-                }
-
-
-            }
-        }
-        return tempWord;
-
     }
 
     public String getUniqueID(Context context) {

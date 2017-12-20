@@ -13,49 +13,76 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/button_submit"
+            android:layout_margin="@dimen/margin_normal"
             android:orientation="vertical">
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/layout_header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardUseCompatPadding="true"
-                android:layout_margin="@dimen/margin_normal">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:padding="@dimen/margin_normal"
+                    android:background="@drawable/layerlist_round_dash"
                     android:gravity="center_horizontal">
 
-                    <com.airbnb.lottie.LottieAnimationView
-                        android:id="@+id/lottie_header"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:scaleType="centerInside"
-                        app:lottie_autoPlay="true"
-                        app:lottie_fileName="animation/trophy.json"
-                        app:lottie_scale="0.3"
-                        app:lottie_loop="false" />
+                    <FrameLayout
+                        android:id="@+id/layout_trophy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:gravity="center_horizontal">
 
-                    <android.support.v4.widget.Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="@dimen/margin_small" />
+                            <com.airbnb.lottie.LottieAnimationView
+                                android:id="@+id/lottie_header"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:adjustViewBounds="true"
+                                android:scaleType="centerInside"
+                                app:lottie_autoPlay="true"
+                                app:lottie_fileName="animation/trophy.json"
+                                app:lottie_scale="0.3"
+                                app:lottie_loop="false" />
+
+                            <android.support.v4.widget.Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/margin_small" />
+
+                            <com.app.infideap.stylishwidget.view.ATextView
+                                android:id="@+id/textView_header"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:padding="@dimen/margin_normal"
+                                android:gravity="center"
+                                android:textColor="@color/colorBlack_1000"
+                                android:textAppearance="@style/TextStyle.Medium"
+                                android:text="@string/title"/>
+
+                            <android.support.v4.widget.Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="@dimen/margin_small" />
+
+                        </LinearLayout>
+                    </FrameLayout>
+
 
                     <com.app.infideap.stylishwidget.view.ATextView
-                        android:id="@+id/textView_header"
+                        android:id="@+id/textView_days"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:padding="@dimen/margin_normal"
-                        android:gravity="center"
+                        android:text="Your latest activity : "
+                        android:paddingTop="@dimen/margin_small"
+                        android:paddingBottom="@dimen/margin_small"
+                        android:paddingRight="@dimen/margin_small"
+                        android:paddingLeft="@dimen/margin_normal"
+                        android:textStyle="italic"
                         android:textColor="@color/colorBlack_1000"
-                        android:textAppearance="@style/TextStyle.Medium"
-                        android:text="@string/title"/>
-
+                        />
                 </LinearLayout>
 
-            </android.support.v7.widget.CardView>
+
 
             <com.app.infideap.stylishwidget.view.ATextView
                 android:layout_width="match_parent"

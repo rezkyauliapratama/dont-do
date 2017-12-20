@@ -55,12 +55,12 @@ public class DateUtil {
     }
 
     public String getUserFriendlyDate(Date date){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MMM, dd", Locale.UK);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd MMMM yyyy");
         return simpleDateFormat.format(date);
     }
 
     public String getUserFriendlyDateTime(Date date){
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MMM,dd HH:mm", Locale.UK);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy MMM,dd HH:mm");
         return simpleDateFormat.format(date);
     }
 

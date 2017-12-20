@@ -15,6 +15,7 @@ import java.util.List;
 import rezkyaulia.android.dont_do.Model.Firebase.Habit;
 import rezkyaulia.android.dont_do.R;
 import rezkyaulia.android.dont_do.Utility.Util;
+import rezkyaulia.android.dont_do.controller.fragment.HomeFragment;
 import rezkyaulia.android.dont_do.databinding.ItemTaskBinding;
 import timber.log.Timber;
 
@@ -25,13 +26,13 @@ import timber.log.Timber;
 public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder> {
     Context mContext;
     List<Habit> mItems;
-    OnRecyclerViewInteraction mListener;
+    HomeFragment.OnFragmentViewInteraction mListener;
 
 
     private int lastPosition = -1;
     private int animationCount = 0;
 
-    public TaskRecyclerViewAdapter(Context mContext,OnRecyclerViewInteraction listener, List<Habit> mItems) {
+    public TaskRecyclerViewAdapter(Context mContext, HomeFragment.OnFragmentViewInteraction listener, List<Habit> mItems) {
         this.mContext = mContext;
         this.mItems = mItems;
         this.mListener = listener;
@@ -63,7 +64,7 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         holder.binding.getRoot().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mListener.onListItemInteraction(item);
+                mListener.onListItemRVInteraction(item);
             }
         });
 
@@ -195,10 +196,4 @@ public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerVi
         }
     }
 
-
-    public interface OnRecyclerViewInteraction {
-        // TODO: Update argument type and name
-        void onListItemInteraction(Habit habit);
-
-    }
 }

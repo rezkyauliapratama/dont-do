@@ -13,7 +13,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import rezkyaulia.android.dont_do.Constant;
-import rezkyaulia.android.dont_do.Model.Firebase.User;
 import rezkyaulia.android.dont_do.PreferencesManager;
 import rezkyaulia.android.dont_do.R;
 import rezkyaulia.android.dont_do.Utility.RxBus;

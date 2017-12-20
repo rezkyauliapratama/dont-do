@@ -48,6 +48,7 @@ import rezkyaulia.android.dont_do.PreferencesManager;
 import rezkyaulia.android.dont_do.R;
 import rezkyaulia.android.dont_do.Utility.Util;
 import rezkyaulia.android.dont_do.controller.adapter.TaskRecyclerViewAdapter;
+import rezkyaulia.android.dont_do.controller.fragment.HomeFragment;
 import rezkyaulia.android.dont_do.controller.fragment.NavigationMenuFragment;
 import rezkyaulia.android.dont_do.database.Facade;
 import rezkyaulia.android.dont_do.database.entity.ActivityTbl;
@@ -60,7 +61,7 @@ import rezkyaulia.android.dont_do.view.LayoutEyeInflate;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements
-        BaseActivity.onListener,TaskRecyclerViewAdapter.OnRecyclerViewInteraction,
+        BaseActivity.onListener,HomeFragment.OnFragmentViewInteraction,
         NavigationView.OnNavigationItemSelectedListener,
         NavigationMenuFragment.OnFragmentInteractionListener{
 
@@ -68,13 +69,11 @@ public class MainActivity extends BaseActivity implements
     ActivityMainBinding binding;
     LayoutEyeInflate layoutEyeInflate;
 
-//    private FirebaseRecyclerAdapter mFirebaseAdapter;
-
     Context mContext;
 
-    TaskRecyclerViewAdapter mAdapter;
-
     private ActionBarDrawerToggle toggle;
+
+    HomeFragment fragment;
 
 
     @Override
@@ -86,20 +85,12 @@ public class MainActivity extends BaseActivity implements
         //activity
         setSupportActionBar(binding.toolbar);
 
-
-        binding.rvLayout.swipeRefreshLayout.setEnabled(false);
         mContext = this;
 
         init();
 
-        initAdapterRV();
-//        setAdapterRv();
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                customDialog();
-            }
-        });
+        fragment = HomeFragment.newInstance();
+        displayFragment(binding.layoutContainer.getId(),fragment);
 
         initDrawableMenu();
         initNavigationView();
@@ -130,7 +121,7 @@ public class MainActivity extends BaseActivity implements
 
 
     @Override
-    public void onListItemInteraction(Habit habit) {
+    public void onListItemRVInteraction(Habit habit) {
         Intent intent = new Intent(this,DetailTaskActivity.class);
         intent.putExtra(DetailTaskActivity.ARGS1,habit);
         startActivity(intent);
@@ -226,263 +217,6 @@ public class MainActivity extends BaseActivity implements
 
         binding.activityMain.setLayoutParams(params);
         ViewCompat.setElevation(binding.activityMain, 20 * slideOffset);
-
-    }
-
-    private void initAdapterRV(){
-        layoutEyeInflate.setVisibility(View.VISIBLE);
-        List<ActivityTbl> activityTbls = Facade.getInstance().getManageActivityTbl().getAll();
-        List<Habit> habits = new ArrayList<>();
-
-        if (activityTbls != null){
-            for(ActivityTbl item : activityTbls){
-                Habit habit = new Habit();
-
-                DetailActivityTbl detailActivityTbl = Facade.getInstance().getManageDetailActivityTbl().getUniqeNew(item.getActivityId());
-
-                /*Calendar cal = Calendar.getInstance();
-                cal.setTimeInMillis(detailActivityTbl.getTimestamp());*/
-                DateModel dateModel = Util.getInstance().dateUtil().getDate(detailActivityTbl.getTimestamp());
-
-                habit.setActivityId(item.getActivityId());
-                habit.setName(item.getName());
-                habit.setDateModel(dateModel);
-
-                habits.add(habit);
-
-            }
-
-            Collections.sort(habits, new Comparator<Habit>() {
-                @Override
-                public int compare(Habit lhs, Habit rhs) {
-                    return Long.compare(rhs.getDateModel().getTimestamp(),lhs.getDateModel().getTimestamp());
-                }
-            });
-        }
-
-        mAdapter = new TaskRecyclerViewAdapter(this,this,habits);
-        binding.rvLayout.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.rvLayout.recyclerView.setAdapter(mAdapter);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    long milis = TimeUnit.SECONDS.toMillis(3);
-                    Timber.e("milis : "+milis);
-                    Thread.sleep(milis);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            layoutEyeInflate.setVisibility(View.GONE);
-
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    Timber.e("ERROR THREAD : "+e.getMessage());
-                }
-
-
-            }
-        }).start();
-
-
-
-    }
-
-
-   private void setAdapterRv (){
-       Timber.e("User Key : ".concat(userKey));
-       /*DatabaseReference activityRef = mDatabase.child(Constant.getInstance().ACTIVITIES).child(userKey);
-       mFirebaseAdapter = new FirebaseRecyclerAdapter<Habit, ActivityRvAdapter>
-                (Habit.class, R.layout.list_item_task, ActivityRvAdapter.class,
-                        activityRef.orderByPriority()) {
-
-
-            @Override
-            protected void populateViewHolder(ActivityRvAdapter viewHolder, Habit model, int position) {
-                String key = this.getRef(position).getKey();
-                Timber.e("key : "+key+" | model : "+new Gson().toJson(model));
-                viewHolder.bind(key,model,position);
-            }
-
-
-
-           @Override
-           public void onViewDetachedFromWindow(ActivityRvAdapter holder) {
-               super.onViewDetachedFromWindow(holder);
-               holder.binding.getRoot().setVisibility(View.VISIBLE);
-               holder.binding.getRoot().clearAnimation();
-           }
-
-
-       };
-*/
-//        binding.rvLayout.recyclerView.setHasFixedSize(true);
-       /*List<ActivityTbl> activityTbls = Facade.getInstance().getManageActivityTbl().getAll();
-        binding.rvLayout.recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        binding.rvLayout.recyclerView.setAdapter(new TaskRecyclerViewAdapter(this,activityTbls));*/
-
-/*
-
-        activityRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Timber.e("onDataChanged : "+dataSnapshot.toString());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-*/
-
-    }
-    private void customDialog(){
-        final DialogAddActivityBinding dialogBinding;
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
-
-        dialogBinding = DataBindingUtil.inflate(LayoutInflater.from(this), R.layout.dialog_add_activity, null, false);
-        dialog.setContentView(dialogBinding.getRoot());
-
-        final Calendar c = Calendar.getInstance();
-
-        final DateModel[] dateModel = {new DateModel()};
-
-        dialogBinding.edit02.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(mContext,
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-
-                                c.set(year,monthOfYear,dayOfMonth/*,0,0*/);
-                                dateModel[0] = Util.getInstance().dateUtil().getDate(c);
-                                dialogBinding.edit02.setText(Util.getInstance().dateUtil().getDateFromFirebase(dateModel[0]));
-
-                            }
-                        }, year, month, day);
-                datePickerDialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-                datePickerDialog.show();
-
-            }
-        });
-
-
-        dialogBinding.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String text = dialogBinding.edit01.getText().toString();
-                Timber.e("ON CLICK");
-                if (!text.isEmpty()) {
-                    ActivityTbl activityTbl = new ActivityTbl();
-                    activityTbl.setName(text);
-                    activityTbl.setActive(true);
-                    activityTbl.setCreatedDate(dateModel[0].getTimestamp());
-
-                    DatabaseReference activityRef = constant.PrimaryRef.child(userKey).push();
-                    activityRef.setValue(activityTbl);
-                    String key = activityRef.getKey();
-                    Timber.e("key Activity : "+key);
-                    if (!key.isEmpty()){
-                        activityTbl.setUserId(userKey);
-                        activityTbl.setActivityId(key);
-                        long id = Facade.getInstance().getManageActivityTbl().add(activityTbl);
-
-                        Timber.e("id add activity : "+id);
-                        DetailActivityTbl detailActivityTbl = new DetailActivityTbl();
-                        detailActivityTbl.setDay(dateModel[0].getDay());
-                        detailActivityTbl.setMonth(dateModel[0].getMonth());
-                        detailActivityTbl.setTimestamp(dateModel[0].getTimestamp());
-                        detailActivityTbl.setYear(dateModel[0].getYear());
-
-                        DatabaseReference detailPref = Constant.getInstance().SecondaryPref.child(key).push();
-                        detailPref.setValue(detailActivityTbl);
-                        String keyDetail = detailPref.getKey();
-                        Timber.e("keyDetail Activity : "+keyDetail);
-
-                        if (!keyDetail.isEmpty()){
-                            detailActivityTbl.setActivityId(key);
-                            detailActivityTbl.setDetailActivityId(keyDetail);
-                            Facade.getInstance().getManageDetailActivityTbl().add(detailActivityTbl);
-
-                            Habit habit = new Habit();
-                            habit.setActivityId(activityTbl.getActivityId());
-                            habit.setName(activityTbl.getName());
-                            habit.setDateModel(Util.getInstance().dateUtil().getDate(detailActivityTbl.getTimestamp()));
-                            addHabit(habit);
-
-                        }
-//                        constant.SecondaryPref.child(key).child(keyDetail).setPriority(-(detailHabit.date.getTimestamp()));
-                    }
-
-//                    Constant.getInstance().PrimaryRef.child(userKey).child(key).setPriority(-(dateModel[0].getTimestamp()));
-/*
-                    if (!key.isEmpty()){
-
-                    }*/
-                    dialog.hide();
-                }
-            }
-        });
-
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-
-    }
-
-    private void addHabit(Habit habit){
-        layoutEyeInflate.setVisibility(View.VISIBLE);
-        final List<Habit> tempHabits = new ArrayList<>();
-        tempHabits.addAll(mAdapter.getItems());
-
-        tempHabits.add(habit);
-
-        Collections.sort(tempHabits, new Comparator<Habit>() {
-            @Override
-            public int compare(Habit lhs, Habit rhs) {
-                return Long.compare(rhs.getDateModel().getTimestamp(),lhs.getDateModel().getTimestamp());
-            }
-        });
-
-        Timber.e("animateTo");
-        mAdapter.animateTo(tempHabits);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    long milis = TimeUnit.SECONDS.toMillis(3);
-                    Timber.e("milis : "+milis);
-                    Thread.sleep(milis);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            layoutEyeInflate.setVisibility(View.GONE);
-
-                        }
-                    });
-                } catch (InterruptedException e) {
-                    Timber.e("ERROR THREAD : "+e.getMessage());
-                }
-
-
-            }
-        }).start();
 
     }
 
@@ -606,6 +340,7 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void updateExistingActivity(String key){
+        Timber.e("key Update: "+key);
         constant.PrimaryRef.child(userKey).
                 addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override

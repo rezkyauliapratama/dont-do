@@ -38,7 +38,7 @@ public class ManageDetailActivityTbl {
     }
 
     public List<DetailActivityTbl > getAll(String activityId) {
-        return dao.queryBuilder().where(DetailActivityTblDao.Properties.ActivityId.eq(activityId)).list();
+        return dao.queryBuilder().where(DetailActivityTblDao.Properties.ActivityId.eq(activityId)).orderDesc(DetailActivityTblDao.Properties.Timestamp).list();
     }
 
     public DetailActivityTbl getUniqeNew(String activityKey){

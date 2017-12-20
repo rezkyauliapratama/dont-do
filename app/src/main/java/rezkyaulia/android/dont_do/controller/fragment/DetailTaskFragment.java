@@ -9,13 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DatabaseReference;
 import com.google.gson.Gson;
+import com.philliphsu.bottomsheetpickers.date.BottomSheetDatePickerDialog;
+import com.philliphsu.bottomsheetpickers.date.DatePickerDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import rezkyaulia.android.dont_do.Constant;
 import rezkyaulia.android.dont_do.Model.Firebase.DateModel;
 import rezkyaulia.android.dont_do.Model.Firebase.Habit;
 import rezkyaulia.android.dont_do.R;
@@ -40,7 +45,6 @@ public class DetailTaskFragment extends BaseFragment {
     FragmentDetailTaskBinding binding;
 
     private Habit mHabit;
-
 
 
 
@@ -86,18 +90,24 @@ public class DetailTaskFragment extends BaseFragment {
 
         initAdapterRV();
 
+        initView();
 
     }
 
-    private void init(){
-
+    private void initView(){
+        binding.buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setDateTimePicker();
+            }
+        });
     }
 
-    private void initAdapterRV(){
-        //List<DetailActivityTbl> dateDetailActivityTbls = Facade.getInstance().getManageDetailActivityTbl().getAll(mHabit.getActivityId());
+    List<DateModel> initData(){
 
         List<DetailActivityTbl> dateDetailActivityTbls = new ArrayList<>();
-        for (int i = 0 ; i<20;i++){
+        dateDetailActivityTbls = Facade.getInstance().getManageDetailActivityTbl().getAll(mHabit.getActivityId());
+       /* for (int i = 0 ; i<20;i++){
             DetailActivityTbl itm = new DetailActivityTbl();
             Calendar cal = Calendar.getInstance();
             cal.add(Calendar.DAY_OF_MONTH,-i);
@@ -115,10 +125,12 @@ public class DetailTaskFragment extends BaseFragment {
                 dateDetailActivityTbls.add(itm);
 
             }
-        }
+        }*/
+
+        long tempDiffMilis = 0;
 
         int i = 0;
-        List<DateModel> temps  = new ArrayList<>();
+        List <DateModel> temps = new ArrayList<>();
         for (DetailActivityTbl item : dateDetailActivityTbls){
             DateModel dateModel = new DateModel();
             dateModel.setDay(item.getDay());
@@ -145,6 +157,9 @@ public class DetailTaskFragment extends BaseFragment {
 
                     long diffMilis = cal1.getTimeInMillis() - cal2.getTimeInMillis();
                     if (diffMilis > 0){
+                        if (tempDiffMilis<diffMilis){
+                            tempDiffMilis = diffMilis;
+                        }
                         dateModel.setShowLine(true);
                     }else{
                         dateModel.setShowLine(false);
@@ -165,14 +180,74 @@ public class DetailTaskFragment extends BaseFragment {
             temps.add(dateModel);
         }
 
-        if (temps != null){
-            mAdapter = new DetailTastRecyclerViewAdapter(getContext(),temps);
+        long days = TimeUnit.DAYS.convert(tempDiffMilis, TimeUnit.MILLISECONDS);
+        if (days > 0){
+            binding.layoutTrophy.setVisibility(View.VISIBLE);
+            binding.textViewHeader.setText("Your best : "+days+" days");
+        }else{
+            binding.layoutTrophy.setVisibility(View.GONE);
+        }
+
+        if (temps.size() > 0){
+            String howLong = Util.getInstance().dateUtil().getHowLongItHasBeen(temps.get(0));
+            binding.textViewDays.setText("Your running day : "+howLong);
+        }
+
+
+        return temps;
+    }
+
+    private void initAdapterRV(){
+        //List<DetailActivityTbl> dateDetailActivityTbls = Facade.getInstance().getManageDetailActivityTbl().getAll(mHabit.getActivityId());
+        List<DateModel> items = initData();
+        if (items!= null){
+            mAdapter = new DetailTastRecyclerViewAdapter(getContext(),items);
             binding.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
             binding.recyclerView.setAdapter(mAdapter);
         }
     }
 
 
+    void setDateTimePicker(){
+        Calendar now = Calendar.getInstance();
+        DatePickerDialog datePickerDialog =
+                DatePickerDialog.newInstance(new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePickerDialog dialog, int year, int monthOfYear, int dayOfMonth) {
+                        now.set(year, monthOfYear, dayOfMonth);
+                        Timber.e("DATE : "+Util.getInstance().dateUtil().getUserFriendlyDate(now.getTime()));
+                        initSetDetailHabit(now);
+                    }
+                },
+                        now.get(Calendar.YEAR),
+                        now.get(Calendar.MONTH),
+                        now.get(Calendar.DAY_OF_MONTH));
+        datePickerDialog.setThemeDark(true);
+        datePickerDialog.show(getChildFragmentManager(), this.getClass().getSimpleName());
+
+    }
 
 
+    void initSetDetailHabit(Calendar cal){
+        DetailActivityTbl detailActivityTbl = new DetailActivityTbl();
+        detailActivityTbl.setDay(cal.get(Calendar.DAY_OF_MONTH));
+        detailActivityTbl.setMonth(cal.get(Calendar.MONTH));
+        detailActivityTbl.setTimestamp(cal.getTimeInMillis());
+        detailActivityTbl.setYear(cal.get(Calendar.YEAR));
+
+        DatabaseReference detailPref = Constant.getInstance().SecondaryPref.child(mHabit.getActivityId()).push();
+        detailPref.setValue(detailActivityTbl);
+        String keyDetail = detailPref.getKey();
+        Timber.e("keyDetail Activity : "+keyDetail);
+
+        if (!keyDetail.isEmpty()){
+            detailActivityTbl.setActivityId(mHabit.getActivityId());
+            detailActivityTbl.setDetailActivityId(keyDetail);
+            Facade.getInstance().getManageDetailActivityTbl().add(detailActivityTbl);
+
+            List<DateModel> temps = initData();
+            mAdapter.animateTo(temps);
+
+        }
+    }
 }

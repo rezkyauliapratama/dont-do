@@ -11,13 +11,11 @@ import org.greenrobot.greendao.annotation.Index;
 import org.greenrobot.greendao.annotation.Property;
 import org.greenrobot.greendao.annotation.Generated;
 
-import rezkyaulia.android.dont_do.Model.Firebase.User;
-
 /**
  * Created by Rezky Aulia Pratama on 12/1/2017.
  */
 @Entity(nameInDb = "UserTbl",indexes = {@Index(value = "UserId", unique = true)})
-public class UserTbl implements Parcelable{
+public class    UserTbl implements Parcelable{
 
     public static final String colUserId = "userid";
     public static final String colEmail= "email";

@@ -60,11 +60,20 @@ public class DetailTastRecyclerViewAdapter extends RecyclerView.Adapter<DetailTa
         }
 
         if (item.getRunningDay() > 0){
-            long days = TimeUnit.DAYS.convert(item.getRunningDay(), TimeUnit.MILLISECONDS);
-            holder.binding.textVuewRunningDays.setText(days + " day");
+           /* long days = TimeUnit.DAYS.convert(item.getRunningDay(), TimeUnit.MILLISECONDS);
+            if (days>0)
+                holder.binding.textVuewRunningDays.setText(days + " day");
+            else
+                holder.binding.textVuewRunningDays.setText("Recently");*/
+            String howLong = Util.getInstance().dateUtil().getHowLongItHasBeen(item);
+            holder.binding.textVuewRunningDays.setText(howLong);
+
+
+
         }else{
             holder.binding.textVuewRunningDays.setText("");
         }
+
 
         setAnimation(holder.binding.getRoot(),position);
 
@@ -133,8 +142,7 @@ public class DetailTastRecyclerViewAdapter extends RecyclerView.Adapter<DetailTa
     }
 
     private void applyAndAnimateAdditions(List<DateModel> mItemTemps) {
-        Timber.e("applyAndAnimateAdditions");
-        Timber.e("LIST DateModelS : "+new Gson().toJson(mItemTemps));
+
         for (int i = 0, count = mItemTemps.size(); i < count; i++) {
             final DateModel nItems = mItemTemps.get(i);
             Timber.e("DateModel : "+new Gson().toJson(nItems));
