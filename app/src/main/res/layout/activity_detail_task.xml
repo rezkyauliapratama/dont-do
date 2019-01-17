@@ -33,6 +33,7 @@
                         android:id="@+id/imageView_backArrow"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:background="@drawable/riple_effect"
                         android:src="@drawable/ic_arrow_back_black_24dp"/>
 
                     <com.app.infideap.stylishwidget.view.ATextView

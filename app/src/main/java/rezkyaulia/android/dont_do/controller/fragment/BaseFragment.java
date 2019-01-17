@@ -52,7 +52,11 @@ public class BaseFragment extends Fragment {
         Timber.e("userKey : "+userKey);
         constant = Constant.getInstance();
 
-        getTokenObservable();
+        RxBus.getInstance().observable(UserTbl.class).subscribe(s -> {
+            Timber.e("subscribe token fragment : " + s);
+            userKey = pref.getUserKey();
+        });
+
     }
 
 
@@ -64,34 +68,6 @@ public class BaseFragment extends Fragment {
 
     }
 
-
-    private void getTokenObservable(){
-        RxBus.getInstance().observable(String.class).subscribe(s -> {
-            Timber.e("subscribe token : "+s);
-
-            boolean isSave = pref.saveToken(s);
-
-            if (isSave){
-                UserTbl usr = new UserTbl();
-                usr.setToken(s);
-                DatabaseReference newRef = mDatabase.child(Constant.getInstance().USERS).push();
-                newRef.setValue(usr);
-
-                token = s;
-                userKey = newRef.getKey();
-
-                boolean b = pref.saveUserKey(userKey);
-
-                if (!userKey.isEmpty()){
-                    usr.setUserId(userKey);
-                    Facade.getInstance().getManagerUserTbl().add(usr);
-                }
-
-            }
-        });
-
-
-    }
     protected int getColorPrimary() {
         return ContextCompat.getColor(getContext(), R.color.colorPrimary);
     }

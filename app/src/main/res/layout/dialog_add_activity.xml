@@ -4,25 +4,53 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="12dp">
-        <EditText
+        android:layout_height="wrap_content">
+
+        <com.app.infideap.stylishwidget.view.ATextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:textAppearance="@style/TextStyle.Medium"
+            android:textColor="@color/colorBlack_1000"
+            android:layout_marginTop="@dimen/margin_small"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingBottom="@dimen/margin_small"
+            android:text="@string/add_new_habit"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="@dimen/margin_normal"
+            android:background="@color/colorLine"/>
+
+
+        <com.app.infideap.stylishwidget.view.AEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextStyle.Medium"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_small"
             android:id="@+id/edit01"/>
 
-        <EditText
+        <com.app.infideap.stylishwidget.view.AEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/edit02"
             android:drawableRight="@drawable/ic_arrow_drop_down_black_24dp"
+            android:textAppearance="@style/TextStyle.Medium"
+            android:layout_marginLeft="@dimen/margin_normal"
+            android:layout_marginRight="@dimen/margin_normal"
+            android:layout_marginBottom="@dimen/margin_small"
             android:hint="Date"
             android:ems="5"
             android:focusable="false"/>
-        <Button
+
+        <com.app.infideap.stylishwidget.view.AButton
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="add"
+            style="@style/Button.Accent.Fill"
             android:id="@+id/button"/>
     </LinearLayout>
 

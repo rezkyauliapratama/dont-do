@@ -13,8 +13,12 @@
             android:id="@+id/fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            app:srcCompat="@drawable/ic_add" />
+            app:fabSize="normal"
+            app:elevation="@dimen/margin_normal"
+            android:layout_gravity="center_horizontal|bottom"
+            android:layout_marginBottom="@dimen/fab_margin"
+            android:background="@drawable/riple_effect"
+            android:src="@drawable/ic_add_circle_24dp" />
 
     </android.support.design.widget.CoordinatorLayout>
 

@@ -5,12 +5,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.graphics.drawable.DrawerArrowDrawable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -46,6 +49,7 @@ import rezkyaulia.android.dont_do.Model.Firebase.DateModel;
 import rezkyaulia.android.dont_do.Model.Firebase.DetailHabit;
 import rezkyaulia.android.dont_do.PreferencesManager;
 import rezkyaulia.android.dont_do.R;
+import rezkyaulia.android.dont_do.Utility.RxBus;
 import rezkyaulia.android.dont_do.Utility.Util;
 import rezkyaulia.android.dont_do.controller.adapter.TaskRecyclerViewAdapter;
 import rezkyaulia.android.dont_do.controller.fragment.HomeFragment;
@@ -74,6 +78,7 @@ public class MainActivity extends BaseActivity implements
     private ActionBarDrawerToggle toggle;
 
     HomeFragment fragment;
+    DrawerArrowDrawable arrowDrawable = null;
 
 
     @Override
@@ -92,6 +97,8 @@ public class MainActivity extends BaseActivity implements
         fragment = HomeFragment.newInstance();
         displayFragment(binding.layoutContainer.getId(),fragment);
 
+        binding.drawerLayout.setScrimColor(Color.TRANSPARENT);
+
         initDrawableMenu();
         initNavigationView();
 
@@ -101,6 +108,8 @@ public class MainActivity extends BaseActivity implements
     @Override
     public void onResume() {
         super.onResume();
+        updateOffset(binding.drawerLayout.isDrawerOpen(binding.navView) ? 1 : 0);
+
     }
 
     @Override
@@ -143,7 +152,6 @@ public class MainActivity extends BaseActivity implements
     private void initDrawableMenu(){
 
 
-
         toggle = new ActionBarDrawerToggle(
                 this, binding.drawerLayout, binding.toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             public float defaultElevation = binding.drawerLayout.getDrawerElevation();
@@ -167,9 +175,12 @@ public class MainActivity extends BaseActivity implements
             @Override
             public void onDrawerSlide(View drawerView, float slideOffset) {
                 super.onDrawerSlide(drawerView, slideOffset);
+                if (drawerView == binding.navView) {
                     updateOffset(slideOffset);
+                    arrowDrawable.setProgress(slideOffset);
                     binding.drawerLayout.setDrawerElevation(0);
-
+                }  else
+                    binding.drawerLayout.setDrawerElevation(defaultElevation);
             }
         };
 
@@ -177,7 +188,7 @@ public class MainActivity extends BaseActivity implements
             binding.navView.setElevation(0);
         }
 
-        DrawerArrowDrawable arrowDrawable = toggle.getDrawerArrowDrawable();
+       arrowDrawable = toggle.getDrawerArrowDrawable();
 //        arrowDrawable.setBarLength(10);
         arrowDrawable.setBarLength(DimensionConverter.getInstance().stringToDimension("24dp", getResources().getDisplayMetrics()));
         arrowDrawable.setBarThickness(DimensionConverter.getInstance().stringToDimension("2dp", getResources().getDisplayMetrics()));
@@ -200,87 +211,28 @@ public class MainActivity extends BaseActivity implements
     }
 
     private void updateOffset(float slideOffset) {
-        Timber.e("updateOffset()");
+//        Timber.e("updateOffset :"+slideOffset);
 //        Util.getInstance().hideKeyBoard(drawer);
 
-        int defaultHeight = ((ViewGroup) binding.navView.getParent()).getHeight();
 
         binding.navView.setAlpha(slideOffset);
         binding.activityMain.setX((binding.navView.getWidth() + 10f) * slideOffset);
+        int defaultHeight = ((ViewGroup)binding.navView.getParent()).getHeight();
         ViewGroup.LayoutParams params
                 = binding.activityMain.getLayoutParams();
+//        Timber.e("coord height:"+params.height);
         float diffHeight = defaultHeight * (0.1f * slideOffset);
         if (slideOffset == 0)
             params.height = ViewGroup.LayoutParams.MATCH_PARENT;
         else
             params.height = (int) (defaultHeight - diffHeight);
 
+//        Timber.e("coord height:"+params.height+"|ELE :"+(20 * slideOffset));
+
         binding.activityMain.setLayoutParams(params);
         ViewCompat.setElevation(binding.activityMain, 20 * slideOffset);
 
     }
-
-    private void customDialog(final String key){
-        final DialogUpdateActivityBinding dialogBinding;
-        final Dialog dialog = new Dialog(mContext);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
-        dialog.setCanceledOnTouchOutside(true);
-
-        final Calendar c = Calendar.getInstance();
-
-        dialogBinding = DataBindingUtil.inflate(LayoutInflater.from(mContext), R.layout.dialog_update_activity, null, false);
-        dialog.setContentView(dialogBinding.getRoot());
-
-        dialogBinding.edit01.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                int year = c.get(Calendar.YEAR);
-                int month = c.get(Calendar.MONTH);
-                int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-                DatePickerDialog datePickerDialog = new DatePickerDialog(mContext,
-                        new DatePickerDialog.OnDateSetListener() {
-
-                            @Override
-                            public void onDateSet(DatePicker view, int year,
-                                                  int monthOfYear, int dayOfMonth) {
-
-                                c.set(year,monthOfYear,dayOfMonth,0,0,0);
-                                DateModel date = Util.getInstance().dateUtil().getDate(c);
-                                dialogBinding.edit01.setText(Util.getInstance().dateUtil().getDateFromFirebase(date));
-
-                            }
-                        }, year, month, day);
-                datePickerDialog.show();
-
-            }
-        });
-
-        dialogBinding.button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DetailHabit detailHabit = new DetailHabit(Util.getInstance().dateUtil().getDate(c));
-                DatabaseReference save  = Constant.getInstance().SecondaryPref.child(key).push();
-                save.setValue(detailHabit);
-                String saveKey = save.getKey();
-
-                Constant.getInstance().SecondaryPref.child(key).child(saveKey).setPriority(-(detailHabit.date.getTimestamp()));
-                Constant.getInstance().PrimaryRef.child(PreferencesManager.getInstance().getUserKey()).child(key).setPriority(-(detailHabit.date.getTimestamp()));
-                if (!saveKey.isEmpty()){
-                    dialog.hide();
-                }
-            }
-        });
-
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-
-    }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -300,13 +252,14 @@ public class MainActivity extends BaseActivity implements
                            UserTbl userTbl = new UserTbl();
                            userTbl.setToken(token);
                            userTbl.setEmail(user.getEmail());
-                           userTbl.setUserId(user.getUid());
-
+                           userTbl.setUserId(userKey);
 
                            Map<String, Object> childUpdates = new HashMap<>();
                            childUpdates.put("/" + userKey, userTbl);
                             Timber.e(Constant.getInstance().USERS+"/"+userKey);
                            mDatabase.child(Constant.getInstance().USERS).updateChildren(childUpdates);
+                           Facade.getInstance().getManagerUserTbl().removeAll();
+                           Facade.getInstance().getManagerUserTbl().add(userTbl);
                        }else{
                            for (DataSnapshot dataSnap : dataSnapshot.getChildren()){
                                UserTbl userTbl= dataSnap.getValue(UserTbl.class);
@@ -327,6 +280,7 @@ public class MainActivity extends BaseActivity implements
 
     private void updateExisitingEmail(String key ,UserTbl userTbl){
         userTbl.setToken(token);
+        userTbl.setUserId(key);
 
         Timber.e("updateExisitingEmail : "+new Gson().toJson(userTbl));
         mDatabase.child(Constant.getInstance().USERS).child(userKey).removeValue();
@@ -336,6 +290,12 @@ public class MainActivity extends BaseActivity implements
         childUpdates.put("/" + key, userTbl);
 
         mDatabase.child(Constant.getInstance().USERS).updateChildren(childUpdates);
+
+        Facade.getInstance().getManagerUserTbl().removeAll();
+        Facade.getInstance().getManagerUserTbl().add(userTbl);
+        PreferencesManager.getInstance().saveUserKey(key);
+        RxBus.getInstance().post(userTbl);
+
         updateExistingActivity(key);
     }
 
@@ -369,6 +329,9 @@ public class MainActivity extends BaseActivity implements
                             constant.PrimaryRef.child(userKey).removeValue();
                             userKey = key;
                             PreferencesManager.getInstance().saveUserKey(key);
+                            Timber.e("ONUPDATE DETAILS");
+                            initFirebase(userKey);
+
                         }
 
 
@@ -418,8 +381,8 @@ public class MainActivity extends BaseActivity implements
 
                         }
                     });
-
         }
+
     }
 
 }

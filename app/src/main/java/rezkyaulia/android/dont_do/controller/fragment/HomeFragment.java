@@ -16,6 +16,7 @@ import android.widget.DatePicker;
 import android.widget.LinearLayout;
 
 import com.google.firebase.database.DatabaseReference;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,6 +29,7 @@ import rezkyaulia.android.dont_do.Constant;
 import rezkyaulia.android.dont_do.Model.Firebase.DateModel;
 import rezkyaulia.android.dont_do.Model.Firebase.Habit;
 import rezkyaulia.android.dont_do.R;
+import rezkyaulia.android.dont_do.Utility.RxBus;
 import rezkyaulia.android.dont_do.Utility.Util;
 import rezkyaulia.android.dont_do.controller.adapter.TaskRecyclerViewAdapter;
 import rezkyaulia.android.dont_do.database.Facade;
@@ -48,6 +50,7 @@ public class HomeFragment extends BaseFragment {
 
     TaskRecyclerViewAdapter mAdapter;
 
+    List<Habit> habits = new ArrayList<>();
 
     public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
@@ -84,6 +87,7 @@ public class HomeFragment extends BaseFragment {
 
         binding.layoutContent.swipeRefreshLayout.setEnabled(false);
 
+        initData();
         initAdapterRV();
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -93,6 +97,10 @@ public class HomeFragment extends BaseFragment {
             }
         });
 
+
+        RxBus.getInstance().observable(ActivityTbl.class).subscribe(s -> {
+           addData(s);
+        });
     }
 
 
@@ -152,7 +160,7 @@ public class HomeFragment extends BaseFragment {
                     activityTbl.setName(text);
                     activityTbl.setActive(true);
                     activityTbl.setCreatedDate(dateModel[0].getTimestamp());
-
+                    Timber.e("userKey Add : "+userKey);
                     DatabaseReference activityRef = constant.PrimaryRef.child(userKey).push();
                     activityRef.setValue(activityTbl);
                     String key = activityRef.getKey();
@@ -205,6 +213,59 @@ public class HomeFragment extends BaseFragment {
 
     }
 
+    private void addOrRemoveHabit(Habit habit){
+        Habit tempHabit = habit;
+        final List<Habit> tempHabits = new ArrayList<>();
+        tempHabits.addAll(mAdapter.getItems());
+
+        if (tempHabits.size() > 0){
+            boolean b = false;
+            for (Habit item: tempHabits){
+                if (item == tempHabit){
+                    b = true;
+                    break;
+                }
+            }
+            if (b){
+                tempHabits.add(tempHabit);
+
+
+                Collections.sort(tempHabits, new Comparator<Habit>() {
+                    @Override
+                    public int compare(Habit lhs, Habit rhs) {
+                        return Long.compare(rhs.getDateModel().getTimestamp(),lhs.getDateModel().getTimestamp());
+                    }
+                });
+
+                Timber.e("animateTo");
+                mAdapter.animateTo(tempHabits);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            long milis = TimeUnit.SECONDS.toMillis(3);
+                            Timber.e("milis : "+milis);
+                            Thread.sleep(milis);
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+//                            layoutEyeInflate.setVisibility(View.GONE);
+
+                                }
+                            });
+                        } catch (InterruptedException e) {
+                            Timber.e("ERROR THREAD : "+e.getMessage());
+                        }
+
+
+                    }
+                }).start();
+
+            }
+        }
+
+    }
     private void addHabit(Habit habit){
         final List<Habit> tempHabits = new ArrayList<>();
         tempHabits.addAll(mAdapter.getItems());
@@ -245,10 +306,8 @@ public class HomeFragment extends BaseFragment {
 
     }
 
-
-    private void initAdapterRV(){
+    public void initData(){
         List<ActivityTbl> activityTbls = Facade.getInstance().getManageActivityTbl().getAll();
-        List<Habit> habits = new ArrayList<>();
 
         if (activityTbls != null){
             for(ActivityTbl item : activityTbls){
@@ -258,13 +317,16 @@ public class HomeFragment extends BaseFragment {
 
                 /*Calendar cal = Calendar.getInstance();
                 cal.setTimeInMillis(detailActivityTbl.getTimestamp());*/
-                DateModel dateModel = Util.getInstance().dateUtil().getDate(detailActivityTbl.getTimestamp());
+                if(detailActivityTbl != null){
+                    DateModel dateModel = Util.getInstance().dateUtil().getDate(detailActivityTbl.getTimestamp());
 
-                habit.setActivityId(item.getActivityId());
-                habit.setName(item.getName());
-                habit.setDateModel(dateModel);
+                    habit.setActivityId(item.getActivityId());
+                    habit.setName(item.getName());
+                    habit.setDateModel(dateModel);
 
-                habits.add(habit);
+                    habits.add(habit);
+                }
+
 
             }
 
@@ -275,6 +337,34 @@ public class HomeFragment extends BaseFragment {
                 }
             });
         }
+    }
+
+
+    public void addData(ActivityTbl activityTbl){
+        Timber.e("ADD DATA : "+new Gson().toJson(activityTbl));
+        Habit habit = new Habit();
+
+        DetailActivityTbl detailActivityTbl = Facade.getInstance().getManageDetailActivityTbl().getUniqeNew(activityTbl.getActivityId());
+
+                /*Calendar cal = Calendar.getInstance();
+                cal.setTimeInMillis(detailActivityTbl.getTimestamp());*/
+        if(detailActivityTbl != null){
+            DateModel dateModel = Util.getInstance().dateUtil().getDate(detailActivityTbl.getTimestamp());
+
+            habit.setActivityId(activityTbl.getActivityId());
+            habit.setName(activityTbl.getName());
+            habit.setDateModel(dateModel);
+
+//                    habits.add(habit);
+            addOrRemoveHabit(habit);
+        }
+
+
+
+    }
+
+    private void initAdapterRV(){
+
 
         mAdapter = new TaskRecyclerViewAdapter(getContext(),mListener,habits);
         binding.layoutContent.recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));

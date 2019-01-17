@@ -2,6 +2,7 @@ package rezkyaulia.android.dont_do.controller.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.view.View;
 
 import rezkyaulia.android.dont_do.Model.Firebase.Habit;
 import rezkyaulia.android.dont_do.R;
@@ -38,7 +39,18 @@ public class DetailTaskActivity extends BaseActivity implements BaseActivity.onL
         }
 
 
+        initView();
 
+
+    }
+
+    void initView(){
+        binding.imageViewBackArrow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     @Override

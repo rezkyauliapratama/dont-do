@@ -90,7 +90,7 @@ public class BaseApplication extends Application
             Timber.plant(new Timber.DebugTree());
             QueryBuilder.LOG_SQL = BuildConfig.DEBUG;
             QueryBuilder.LOG_VALUES = BuildConfig.DEBUG;
-            refWatcher = LeakCanary.install(this);
+//            refWatcher = LeakCanary.install(this);
 
         }
       /*  if (LeakCanary.isInAnalyzerProcess(this)) {

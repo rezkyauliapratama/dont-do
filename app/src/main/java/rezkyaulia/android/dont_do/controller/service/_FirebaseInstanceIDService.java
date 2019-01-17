@@ -17,6 +17,7 @@ package rezkyaulia.android.dont_do.controller.service; /**
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 
+import rezkyaulia.android.dont_do.Model.FirebaseToken;
 import rezkyaulia.android.dont_do.Utility.RxBus;
 import rezkyaulia.android.dont_do.eventBus;
 import timber.log.Timber;
@@ -39,7 +40,7 @@ public class _FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
         Timber.e("refreshedToken : " + refreshedToken);
 
-        RxBus.getInstance().post(refreshedToken);
+        RxBus.getInstance().post(new FirebaseToken(refreshedToken));
 
     }
     // [END refresh_token]

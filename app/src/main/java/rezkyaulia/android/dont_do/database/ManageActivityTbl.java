@@ -38,6 +38,11 @@ public class ManageActivityTbl {
     }
 
 
+    public ActivityTbl get(String key) {
+        return dao.queryBuilder().where(ActivityTblDao.Properties.ActivityId.eq(key)).orderDesc(ActivityTblDao.Properties.CreatedDate).limit(1).unique();
+    }
+
+
     public void removeAll() {
         dao.deleteAll();
     }

@@ -6,4 +6,6 @@
     <string name="navigation_drawer_open">drawer open</string>
     <string name="navigation_drawer_close">drawer closed</string>
     <string name="sign_out">Sign out</string>
+    <string name="information">Information</string>
+    <string name="add_new_habit">Add new habit</string>
 </resources>

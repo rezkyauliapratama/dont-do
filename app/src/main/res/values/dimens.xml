@@ -20,4 +20,6 @@
     <dimen name="size_image_36dp">36dp</dimen>
     <dimen name="size_image_24dp">24dp</dimen>
 
+    <dimen name="fab_margin">16dp</dimen>
+
 </resources>
